@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+<head>
+        <title>iRules Profiler Visualization GUI</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <script src="https://www.w3schools.com/lib/w3.js"></script>
+        <meta name="description" content="iRule GUI">
+        <meta name="keywords" content="iRule GUI">
+</head>
+<body>
+
+<ul class="dropme">
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">Documentation Resources</a>
+    <div class="dropdown-content">
+      <a href="/userdocs/">User Docs</a>
+      <a href="/faq/">Frequently Asked Questions</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-1-28899">iRule Execution Tracing and Performance Profiling, Part 1</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-2-28925">iRule Execution Tracing and Performance Profiling, Part 2</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-3-29020">iRule Execution Tracing and Performance Profiling, Part 3</a>
+    </div>
+  </li>
+  <li><a href="/">CampFire</a></li>
+</ul>
+
+
+<!--FLAMEGRAPHS GALORE--->
+<div class="flamegraphframe"> 
+	<center> 
+	<p class="fgresultpost"> 
+		GENERAL FLAMEGRAPH FOR COMBINED CALLS
+                <br><p class="cleandisplay"><p class="resultsheader">FILENAME: {% if filename1 != "empty"  %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename1 }}</span> 
+			{% else %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename2 }}</span> {% endif %}</p></p>
+		<br><p class="cleandisplay"><p class="resultsheader">SELECTED RULE FILTERS: {% if checked %} <span style="font-weight:300">{{ checked }}</span>{% endif %}</p></p>                
+		<br><p class="cleandisplay">
+                <p class="resultsheader">SELECTED VALUE FILTERS: 
+		<br><span style="font-weight:400"> Event: </span> {% if event != "['']" %} <span style="font-weight:300"> {{ event }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> iRule: </span> {% if irule != "['']" %} <span style="font-weight:300"> {{ irule }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Flow: </span> {% if flow != "['']" %} <span style="font-weight:300"> {{ flow }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Remote: </span> {% if remote != "['']" %} <span style="font-weight:300"> {{ remote }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Local: </span> {% if local != "['']" %} <span style="font-weight:300"> {{ local }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                </p>
+		</p>
+	</p>
+	<object data="/static/myflame1Combined.svg" type="image/svg+xml" width="1150" height="225">
+		{% if errorMessage != "['']" and filename1 != "empty"%}
+                        {{ errorMessage }}
+                {% elif errorMessage != "['']" and filename2 != "empty"%}
+                        {{ errorMessage }}
+		{% else %}		
+			{% if str1 is defined %}
+				{{ str1|safe }}
+			{% endif %}
+		{% endif %}
+
+	</object>
+	<div class="downloadsection">
+		<a href="/return-file/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-filepng/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD: </p>
+	</div>
+	</center>
+</div>
+
+
+<div class="flamegraphframe">
+	<center>
+	<p class="fgresultpost">
+		GENERAL FLAMEGRAPH FOR SEQUENTIAL CALLS 
+		<br><p class="cleandisplay"><p class="resultsheader">FILENAME: {% if filename1 != "empty"  %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename1 }}</span>
+                	{% else %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename2 }}</span> {% endif %}</p></p>
+       		<br><p class="cleandisplay"><p class="resultsheader">SELECTED RULE FILTERS: {% if checked %} <span style="font-weight:300">{{ checked }}</span>{% endif %}</p></p>
+       		<br><p class="cleandisplay">
+       		<p class="resultsheader">SELECTED VALUE FILTERS: 
+		<br><span style="font-weight:400;">Event:</span> {% if event != "['']" %} <span style="font-weight:300"> {{ event }}</span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+       		<br><span style="font-weight:400"> iRule:</span> {% if irule != "['']" %} <span style="font-weight:300"> {{ irule }}</span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+       		<br><span style="font-weight:400"> Flow:</span> {% if flow != "['']" %} <span style="font-weight:300"> {{ flow }}</span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+       		<br><span style="font-weight:400"> Remote:</span> {% if remote != "['']" %} <span style="font-weight:300"> {{ remote }}</span> {% else %} <span style="font-weight:300"> none </span>{% endif %}
+       		<br><span style="font-weight:400"> Local:</span> {% if local != "['']" %} <span style="font-weight:300"> {{ local }}</span> {% else %} <span style="font-weight:300"> none </span>{% endif %}
+                </p>
+                </p>
+        </p>
+	<object data="/static/myflame1Separate.svg" type="image/svg+xml" width="1150" height="225">
+		{% if errorMessage != "['']" and filename1 != "empty"%}
+                        {{ errorMessage }}
+		{% elif errorMessage != "['']" and filename2 != "empty"%}
+                        {{ errorMessage }}
+                {% else %}
+                        {% if str2 is defined %}
+                                {{ str2|safe }}
+                        {% endif %}
+                {% endif %}
+	</object>
+	<div class="downloadsection">
+		<a href="/return-filesep/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-fileseppng/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD: </p>
+	</div>
+	</center>
+</div>
+
+
+<div class="flamegraphframe">
+	<center>
+	<p class="fgresultpost">
+	GENERAL FLAMEGRAPH FOR COMBINED CALLS 
+
+	<br><p class="cleandisplay"><p class="resultsheader">FILENAME: {% if filename1 != "empty"  %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename3 }}</span>
+                        {% else %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename3 }} {% endif %}</span></p></p>
+                <br><p class="cleandisplay"><p class="resultsheader">SELECTED RULE FILTERS: {% if filename3 != "empty" %}<span style="font-weight:300">{{ checked }}</span>{% endif %}</p></p>
+                <br><p class="cleandisplay">
+                <p class="resultsheader">SELECTED VALUE FILTERS:
+		<br><span style="font-weight:400;"> Event: </span> {% if filename3 != "empty" and event != "['']"%} <span style="font-weight:300"> {{ event }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> iRule: </span> {% if filename3 != "empty" and irule != "['']"%} <span style="font-weight:300"> {{ irule }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Flow: </span> {% if filename3 != "empty" and flow != "['']"%} <span style="font-weight:300"> {{ flow }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Remote: </span> {% if filename3 != "empty" and remote != "['']"%} <span style="font-weight:300"> {{ remote }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Local: </span> {% if filename3 != "empty" and local != "['']"%} <span style="font-weight:300"> {{ local }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                </p>
+                </p>
+        </p>
+	<object data="/static/myflame2Combined.svg" type="image/svg+xml" width="1150" height="225">
+		{% if errorMessage != "['']" and filename3 != "empty" %}
+                        {{ errorMessage }}
+                {% else %}
+                        {% if str3 is defined %}
+                                {{ str3|safe }}
+                        {% endif %}
+                {% endif %}
+	</object>
+	<div class="downloadsection">
+		<a href="/return-file2/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-file2png/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD: </p>
+	</div>
+	</center>
+</div>
+
+
+<div class="flamegraphframe">
+	<center>
+	<p class="fgresultpost">
+	GENERAL FLAMEGRAPH FOR SEQUENTIAL CALLS 
+	<br><p class="cleandisplay"><p class="resultsheader">FILENAME: {% if filename1 != "empty"  %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename3 }}</span>
+                        {% else %} <span style="font-weight:300;letter-spacing:0.05em;">{{ filename3 }} {% endif %}</span></p></p>
+                <br><p class="cleandisplay"><p class="resultsheader">SELECTED RULE FILTERS: {% if filename3 != "empty" %}<span style="font-weight:300">{{ checked }}</span>{% endif %}</p></p>
+                <br><p class="cleandisplay">
+		<p class="resultsheader">SELECTED VALUE FILTERS:
+                <br><span style="font-weight:400;"> Event: </span> {% if filename3 != "empty" and event != "['']"%} <span style="font-weight:300"> {{ event }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> iRule: </span> {% if filename3 != "empty" and irule != "['']"%} <span style="font-weight:300"> {{ irule }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Flow: </span> {% if filename3 != "empty" and flow != "['']"%} <span style="font-weight:300"> {{ flow }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Remote: </span> {% if filename3 != "empty" and remote != "['']"%} <span style="font-weight:300"> {{ remote }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Local: </span> {% if filename3 != "empty" and local != "['']"%} <span style="font-weight:300"> {{ local }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                </p>
+                </p>        
+	</p>
+	<object data="/static/myflame2Separate.svg" type="image/svg+xml" width="1150" height="225">
+		{% if errorMessage != "['']" and filename3 != "empty" %}
+                        {{ errorMessage }}
+                {% else %}
+                        {% if str4 is defined %}
+                                {{ str4|safe }}
+                        {% endif %}
+                {% endif %}
+	</object>
+	<div class="downloadsection">
+		<a href="/return-file2sep/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-file2seppng/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD: </p>
+	</div>
+	</center>
+</div>
+
+
+<div class="flamegraphframe">
+	<center>
+        <p class="fgresultpost">
+        DIFFERENTIAL FLAMEGRAPH FOR BEFORE AND AFTER FILE
+        <br><p class="cleandisplay"><p class="resultsheader">FILENAME: {% if filename2 != "empty" and filename3 != "empty"  %} <span style="font-weight:300;letter-spacing:0.05em;">
+		{{ filename2 }} and {{ filename3 }} </span> {% else %} <span style="font-weight:300;"> empty </span> {% endif %}
+                </p></p>
+                <br><p class="cleandisplay"><p class="resultsheader">SELECTED RULE FILTERS: {% if filename3 != "empty" and filename2 != "empty"  %}<span style="font-weight:300;">{{ checked }}</span>
+		{% else %}<span style="font-weight:300;"> empty </span>{% endif %}</p></p>
+                <br><p class="cleandisplay">
+                <p class="resultsheader"> SELECTED VALUE FILTERS:
+		<br><span style="font-weight:400;"> Event: </span> {% if filename2 != "empty" and  filename3 != "empty" and event != "['']" %} <span style="font-weight:300"> {{ event }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> iRule: </span> {% if filename2 != "empty" and  filename3 != "empty"and irule != "['']" %} <span style="font-weight:300"> {{ irule }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Flow: </span> {% if filename2 != "empty" and  filename3 != "empty" and flow != "['']" %} <span style="font-weight:300"> {{ flow }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Remote: </span> {% if filename2 != "empty" and  filename3 != "empty" and remote != "['']" %} <span style="font-weight:300"> {{ remote }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                <br><span style="font-weight:400"> Local: </span> {% if filename2 != "empty" and  filename3 != "empty" and local != "['']" %} <span style="font-weight:300"> {{ local }} </span> {% else %} <span style="font-weight:300"> none </span> {% endif %}
+                </p>
+                </p>
+        </p>
+	<div class="leftdiff">
+	<center><p class="diffresultsheader"> BEFORE DIFFERENTIAL </p></center>
+	<object data="/static/diff1.svg" type="image/svg+xml" width="570" height="140">
+		{% if errorMessage != "['']" and filename2 != "empty" and filename3 != "empty" %}
+                        {{ errorMessage }}
+                {% else %}
+                        {% if str5 is defined %}
+                                {{ str5|safe }}
+                        {% endif %}
+                {% endif %}
+	</object>
+	</div>
+
+	<div class="rightdiff">
+	<center><p class="diffresultsheader"> AFTER DIFFERENTIAL </p></center>
+        <object data="/static/diff2.svg" type="image/svg+xml" width="570" height="140">
+		{% if errorMessage != "['']" and filename2 != "empty" and filename3 != "empty" %}
+                        {{ errorMessage }}
+                {% else %}
+                        {% if str6 is defined %}
+                                {{ str6|safe }}
+                        {% endif %}
+                {% endif %}
+        </object>
+	</div>
+	<br>
+	<center><p class="diffresultsheader"> CHANGE ONLY DIFFERENTIAL </p></center>
+	<object data="/static/onlydiff.svg" type="image/svg+xml" width="1150" height="170">
+		{% if errorMessage != "['']" and filename2 != "empty" and filename3 != "empty" %}
+                        {{ errorMessage }}
+                {% else %}
+                        {% if str7 is defined %}
+                                {{ str7|safe }}
+                        {% endif %}
+                {% endif %}
+        </object>
+
+	<div class="downloadsection"> 
+		<a href="/return-diff1/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-diff1png/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD BEFORE DIFFERENTIAL: </p>
+	</div>
+
+	<div class="downloadsection">
+		<a href="/return-diff2/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-diff2png/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD AFTER DIFFERENTIAL: </p>
+	</div>
+
+	<div class="downloadsection">
+		<a href="/return-onlydiff/" target="blank"><button class="download">SVG</button></a>
+		<a href="/return-onlydiffpng/" target="blank"><button class="download">PNG</button></a>
+		<p class="downloadtext">DOWNLOAD CHANGE ONLY DIFFERENTIAL: </p>
+	</div>
+
+</div>
+
+<center><a href="/make-new/" target="blank"><button class="makenewflame">+ MAKE NEW</button></a></center>
+
+
+</body>
+</html>
+
+
+

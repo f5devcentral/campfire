@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<title>iRules Profiler Visualization GUI</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500&display=swap" rel="stylesheet">	
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<meta name="description" content="iRule GUI">
+	<meta name="keywords" content="iRule GUI">
+</head>
+<body>
+
+
+<ul class="dropme">
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">Documentation Resources</a>
+    <div class="dropdown-content">
+      <a href="/userdocs/">User Docs</a>
+      <a href="/faq/">Frequently Asked Questions</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-1-28899">iRule Execution Tracing and Performance Profiling, Part 1</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-2-28925">iRule Execution Tracing and Performance Profiling, Part 2</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-3-29020">iRule Execution Tracing and Performance Profiling, Part 3</a>
+    </div>
+  </li>
+  <li><a href="/">CampFire</a></li>
+</ul>
+
+
+<div class="description">
+	<p style="font-size: 2.2em; font-weight:500; color: white; text-align: center; padding: 1em 0px 5px 0px; margin:1em 0px 5px 0px; display: block"> CampFire FAQ </p>
+</div>
+
+<div class="faqmainsection">
+	<p class="faqfilterlabelquestion"> WHAT CAN CAMPFIRE DO? </p>
+	<ul class="faqbulletpoints">
+                        <li class="faqbullets"> Helps turn your iRule log .txt files into flame graphs </li>
+                        <li class="faqbullets"> Create general flame graphs and/or differential flame graphs </li>
+                        <li class="faqbullets"> Provides type and value filter options </li>
+                        <li class="faqbullets"> Provides archival option of flame graphs in either .svg and/or .png </li>
+        </ul>
+
+	<p class="faqfilterlabelquestion"> WHAT IS THE DIFFERENCE BETWEEN A GENERAL FLAME GRAPH AND A DIFFERENTIAL FLAME GRAPH? </p>
+	<p class="faqtextnomargin"> Differential flame graphs are colored to show the differences in execution time between 2 data sets. In general flame graphs, the colors provide no additional information. 
+	The colors exist only to improve readability of the flame graph. </p>
+
+	<p class="faqfilterlabelquestion"> WHAT INFORMATION CAN I GET FROM A FLAME GRAPH? </p>
+	<ul class="faqbulletpoints">
+                        <li class="faqbullets"> Flame graphs allow users to identify the execution time of function calls quickly and accurately </li>
+                        <li class="faqbullets"> Flame graphs visualize code paths of uploaded iRule log files and allows users to navigate it easily  </li>
+                        <li class="faqbullets"> Differential flame graphs provide users the ability to compare differences between 2 sets of iRule profiler log data and shows the results of increased, 
+			decreased or no change in execution time of function calls </li>
+                        <li class="faqbullets"> Flame graphs provides users the ability to search for a specific function call and will highlight the 
+			function call matches in magenta pink, along with displaying the percentage of how much that function call 
+			takes relative to the entire program in the right bottom hand corner </li>
+        </ul>
+
+	<p class="faqfilterlabelquestion"> WHAT DO THE RECTANGLES REPRESENT? </p>
+	<p class="faqtextnomargin"> Each separate rectangle in a flame graph either represents individual function calls or combined function calls. The following list shows how each flame graph is organized: 
+	<br> General Flame Graph for Sequential Calls = Individual Function Calls
+	<br> General Flame Graph for Combined Calls, Differential Flame Graphs = Combined Function Calls </p>
+
+	<p class="faqfilterlabelquestion"> WHY AM I GETTING THIS ERROR MESSAGE: 'Invalid input, no Flamegraph created'? </p>
+	<ol class="faqbulletpoints">
+		<li class="faqbullets"><span style="font-weight: 400"> Uploading an empty .txt file. </span> Check your .txt file and make sure your iRule log files exist. </li>
+		<li class="faqbullets"><span style="font-weight: 400"> Uploading a .txt file and checking filters that eliminate all the data. </span> Your iRule log file might already have a layer of filtration where some type filters have been applied. 
+		When picking the filter options, there is a chance that the combination 
+		of chosen type filters results in an empty input.  </li>
+        </ol>
+
+	<p class="faqfilterlabelquestion"> WHY AM I GETTING THIS ERROR MESSAGE: 'UNABLE TO GENERATE FILE: BYTECODE must not be lowest level filtered. EVENT, 
+	RULE, and/or RULEVM must be filtered with bytecode. Input file also cannot contain only BYTECODE entries'? </p>
+	<p class="faqtextnomargin"> You are getting this error message because our application does not allow users to select BYTECODE 
+	as the only type filter. In addition, it does not allow users to select BYTECODE without applying either EVENT, RULE, and/or RULEVM. 
+	The file input also cannot only contain BYTECODE entries. </p>
+
+	<p class="faqfilterlabelquestion"> WHY IS THE WINDOW REFRESHING BACK TO THE MAIN PAGE? </p>
+	<ol class="faqbulletpoints">
+                        <li class="faqbullets"><span style="font-weight: 400"> Uploading a file that is not a .txt file. </span> CampFire only accepts .txt files as input. </li>
+                        <li class="faqbullets"><span style="font-weight: 400"> Failing to upload a before and/or after .txt file when making a differential flame graph. </span> To make a flame graph, 
+			a valid .txt file must be uploaded for both the before and after to create a differential flame graph. </li>
+                        <li class="faqbullets"><span style="font-weight: 400"> Failing to upload all necessary .txt file. </span></li>
+        </ol>
+
+
+</div>
+
+</body>
+</html>
+

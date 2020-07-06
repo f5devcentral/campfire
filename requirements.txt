@@ -1,0 +1,7 @@
+flask
+flask-jsonpify
+flask-sqlalchemy
+flask-restful
+prometheus_client
+python-openstackclient
+requests

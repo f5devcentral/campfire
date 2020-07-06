@@ -1,0 +1,145 @@
+Jun  5 03:36:02 my.test.local info audit_forwarder[26124]: audit_forwarder started.
+Jun  5 09:20:27 my.test.local err mcpd[8518]: 01180010:3: [license processing][error]: license verification failed
+Jun  5 09:20:27 my.test.local err mcpd[8518]: 01180010:3: [license processing][error]: invalid input for license parsing
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070419:5: Platform initialization phase triggered.
+Jun  5 09:20:27 my.test.local notice chmand[8520]: 012a0005:5: Platform marketing name: BIG-IP Virtual Edition
+Jun  5 09:20:27 my.test.local notice chmand[8520]: 012a0005:5: Platform marketing name: BIG-IP Virtual Edition
+Jun  5 09:20:27 my.test.local warning sod[8074]: 010c007c:4: Device waiting in Offline for configuration load to complete.
+Jun  5 09:20:27 my.test.local notice sod[8074]: 010c0054:5: Offline for traffic group traffic-group-1.
+Jun  5 09:20:27 my.test.local notice sod[8074]: 010c003e:5: Offline
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: 6RD feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Security NAT feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Scrubber feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: ASM feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: PSM feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: AFM feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: DoS feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Subscriber management  feature is not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Sd feature is not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: PEM feature is not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Gy feature is not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Gx feature is not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: LTM Transparent feature not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: NAT feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: MAPT feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: MAP feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: LW4O6 feature is licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Subscriber Management feature not licensed
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01010044:5: Cumulative log rate exceeded!  Throttling all non-debug logs.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Resuming log processing at this invocation; held 3 messages.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Updated existing subscriber tmrouted with new filter class 8004000.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Updated existing subscriber statsd with new filter class 0.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070406:5: Removed publication with publisher id statsd
+Jun  5 09:20:27 7833-tmm0 notice tmm[16705]: 01340011:5: HA unit 1 state change: from 1 to 0.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Updated existing subscriber tmrouted with new filter class 8004000.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Updated existing subscriber statsd with new filter class 0.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070404:5: Add a new Publication for publisherID statsd and filterType 134217728
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Updated existing subscriber tmrouted with new filter class 8004000.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070413:5: Per-invocation log rate exceeded; throttling.
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070406:5: Removed publication with publisher id statsd
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070404:5: Add a new Publication for publisherID statsd and filterType 134217728
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070410:5: Removed subscription with subscriber id BIGD_Subscriber2
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070410:5: Removed subscription with subscriber id BIGD_Subscriber1
+Jun  5 09:20:27 my.test.local notice mcpd[8518]: 01070410:5: Removed subscription with subscriber id BIGD_Subscriber0
+Jun  5 09:20:27 my.test.local info bigd.2[17438]: 0114002c:6: HA daemon_heartbeat bigd disabled.
+Jun  5 09:20:27 my.test.local info bigd.0[17436]: 0114002c:6: HA daemon_heartbeat bigd disabled.
+Jun  5 09:20:27 my.test.local info bigd.1[17437]: 0114002c:6: HA daemon_heartbeat bigd disabled.
+Jun  5 09:20:27 my.test.local info bigd.start[12419]: (_reap_children): child process pid=17436 exited gracefully with status=0
+Jun  5 09:20:27 my.test.local info bigd.start[12419]: (_reap_children): child process pid=17437 exited gracefully with status=0
+Jun  5 09:20:27 my.test.local info bigd.start[31951]: Execing bigd: /usr/bin/bigd bigd.0 -P 3 -I 0
+Jun  5 09:20:27 my.test.local info bigd.start[12419]: (_reap_children): child process pid=17438 exited gracefully with status=0
+Jun  5 09:20:27 my.test.local info bigd.start[31953]: Execing bigd: /usr/bin/bigd bigd.1 -P 3 -I 1
+Jun  5 09:20:27 my.test.local info bigd.start[31955]: Execing bigd: /usr/bin/bigd bigd.2 -P 3 -I 2
+Jun  5 09:20:27 my.test.local notice logger[31954]: /usr/bin/tmrouted -d 0 -o /var/tmp/tmrouted.out  ==> /usr/bin/bigstart disable rtconfd
+Jun  5 09:20:27 my.test.local notice logger[31956]: /usr/bin/tmrouted -d 0 -o /var/tmp/tmrouted.out  ==> /usr/bin/bigstart disable rtconfd
+Jun  5 09:20:28 my.test.local warning tmsh[31937]: 01420013:4: [api-status-warning] sys/ecm/cloud-provider is deprecated
+Jun  5 09:20:28 my.test.local warning tmsh[31937]: 01420013:4: [api-status-warning] sys/ecm/cloud-provider is deprecated
+Jun  5 09:20:28 my.test.local warning tmsh[31937]: 01420013:4: [api-status-warning] sys/ecm/cloud-provider is deprecated
+Jun  5 09:20:28 my.test.local info mprov:31922:[32015]: Invoked as: /usr/bin/mprov.pl (pid=31922) --quiet --legacy
+Jun  5 09:20:28 my.test.local info mprov:31922:[31922]: 'Provisioning (legacy update) successful.'
+Jun  5 09:20:29 my.test.local warning tmsh[31937]: 01420013:4: [api-status-warning] pem/protocol/profile/gx is deprecated
+Jun  5 09:20:29 my.test.local warning tmsh[31937]: 01420013:4: [api-status-warning] pem/protocol/profile/gx is deprecated
+Jun  5 09:20:29 my.test.local warning tmsh[31937]: 01420013:4: Per-invocation log rate exceeded; throttling.
+Jun  5 09:20:29 my.test.local info snmpd[5587]: 0114002c:6: HA daemon_heartbeat %snmpd disabled.
+Jun  5 09:20:30 my.test.local notice sod[8074]: 010c006c:5: proc stat: [0] pid:31955 comm:(bigd) state:S utime:10 stime:0 cutime:0 cstime:0 starttime:248735025 vsize:54591488 rss:6317 wchan:18446744071579587147 blkio_ticks:1 [-1] pid:17438 comm:(bigd) state:S utime:78885 stime:45096 cutime:0 cstime:0 starttime:10233 vsize:60387328 rss:6444 wchan:18446744071581287918 blkio_ticks:14 [-2] pid:17438 comm:(bigd) state:S utime:78885 stime:45096 cutime:0 cstime:0 starttime:10233 vsize:60387328 rss:6444 wchan:18446744071581287918 blkio_ticks:14 .
+Jun  5 09:20:30 my.test.local notice mcpd[8518]: 01071038:5: Loading keys from the file.
+Jun  5 09:20:30 my.test.local notice mcpd[8518]: 01071038:5: Unit key hash from key header: a2:fc:02:0f:fa:58:55:89:61:be:eb:35:62:a9:2d:db:33:2c:3f:3b
+Jun  5 09:20:30 my.test.local notice mcpd[8518]: 01071038:5: Unit key hash computed from read key:a2:fc:02:0f:fa:58:55:89:61:be:eb:35:62:a9:2d:db:33:2c:3f:3b
+Jun  5 09:20:34 my.test.local notice mcpd[8518]: 01071622:5: APM: Not provisioned, skipping DB instance creation.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071436:5: CMI listener established at 10.10.20.2 port 6699
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071434:5: No CMI peer devices configured
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071622:5: APM: Not provisioned, skipping DB instance creation.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 010719e7:5: Virtual Address /Common/0.0.0.0 general status changed from BLUE to RED.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 010719e7:5: Virtual Address /Common/10.1.1.50 general status changed from BLUE to RED.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 010719e8:5: Virtual Address /Common/10.10.10.160 monitor status changed from UNCHECKED to UNCHECKED.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 010719e8:5: Virtual Address /Common/10.10.10.161 monitor status changed from UNCHECKED to UNCHECKED.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 010719e8:5: Virtual Address /Common/10.10.10.162 monitor status changed from UNCHECKED to UNCHECKED.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 010719e7:5: Virtual Address /Common/10.10.10.163 general status changed from BLUE to RED.
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071436:5: CMI listener established at 10.10.20.2 port 6699
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071434:5: No CMI peer devices configured
+Jun  5 09:20:35 my.test.local warning mcpd[8518]: 01071859:4: Warning generated : cannot set MTU for eth1. No such device. For legacy VE driver
+Jun  5 09:20:35 my.test.local warning mcpd[8518]: 01071859:4: Warning generated : cannot set MTU for eth2. No such device. For legacy VE driver
+Jun  5 09:20:35 my.test.local notice logger[32107]: /usr/bin/mcpd -dbmem 512 -listen 127.0.0.1 -f  ==> /usr/bin/bigstart disable pgadmind
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071681:5: SNMP_TRAP: Virtual /Common/vs has become available
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071681:5: SNMP_TRAP: Virtual /Common/vs1 has become available
+Jun  5 09:20:35 my.test.local notice mcpd[8518]: 01071681:5: SNMP_TRAP: Virtual /Common/vs2 has become available
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Resuming log processing at this invocation; held 3 messages.
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Schema object encode failed: No foreign keys found for nested object with tag 17547
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Schema object encode failed: No foreign keys found for nested object with tag 17547
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Schema object encode failed: No foreign keys found for nested object with tag 17547
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Schema object encode failed: No foreign keys found for nested object with tag 17547
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Schema object encode failed: No foreign keys found for nested object with tag 17547
+Jun  5 09:20:36 my.test.local warning icr_eventd[7696]: 01a10008:4: Per-invocation log rate exceeded; throttling.
+Jun  5 09:20:36 my.test.local info bigd.2[31955]: 0114002b:6: HA daemon_heartbeat bigd enabled.
+Jun  5 09:20:36 my.test.local info bigd.0[31951]: 0114002b:6: HA daemon_heartbeat bigd enabled.
+Jun  5 09:20:36 my.test.local info bigd.1[31953]: 0114002b:6: HA daemon_heartbeat bigd enabled.
+Jun  5 09:20:36 my.test.local notice mcpd[8518]: 01070424:5: Full configuration initialization phase triggered.
+Jun  5 09:20:36 my.test.local info snmpd[32043]: 0114002b:6: HA daemon_heartbeat %snmpd enabled.
+Jun  5 09:20:37 my.test.local notice mcpd[8518]: 01070677:5: Full gtm configuration initialization phase triggered.
+Jun  5 09:20:37 my.test.local notice mcpd[8518]: 01070427:5: Initialization complete.  The MCP is up and running
+Jun  5 09:20:37 my.test.local notice mcpd[8518]: 010713c1:5: Initial management network proposals triggered (initConfigStateMachine: mcp phase running).
+Jun  5 09:20:37 my.test.local notice mcpd[8518]: 010713c2:5: No new proposal values detected.
+Jun  5 09:20:37 my.test.local notice mcpd[8518]: 01071436:5: CMI listener established at 10.10.20.2 port 6699
+Jun  5 09:20:37 my.test.local notice mcpd[8518]: 01071434:5: No CMI peer devices configured
+Jun  5 09:20:38 my.test.local notice mcpd[8518]: 010719e7:5: Virtual Address /Common/10.10.10.160 general status changed from BLUE to GREEN.
+Jun  5 09:20:38 my.test.local notice mcpd[8518]: 010719e8:5: Virtual Address /Common/10.10.10.160 monitor status changed from UNCHECKED to UP.
+Jun  5 09:20:38 my.test.local notice mcpd[8518]: 010719e7:5: Virtual Address /Common/10.10.10.161 general status changed from BLUE to GREEN.
+Jun  5 09:20:38 my.test.local notice mcpd[8518]: 010719e8:5: Virtual Address /Common/10.10.10.161 monitor status changed from UNCHECKED to UP.
+Jun  5 09:20:38 my.test.local notice mcpd[8518]: 010719e7:5: Virtual Address /Common/10.10.10.162 general status changed from BLUE to GREEN.
+Jun  5 09:20:38 my.test.local notice mcpd[8518]: 010719e8:5: Virtual Address /Common/10.10.10.162 monitor status changed from UNCHECKED to UP.
+Jun  5 09:21:38 my.test.local warning sod[8074]: 010c007d:4: Configuration load completed, device ready for online.
+Jun  5 09:21:38 my.test.local notice sod[8074]: 010c006d:5: Leaving Offline for Active for dbvar not redundant.
+Jun  5 09:21:38 my.test.local notice sod[8074]: 010c0053:5: Active for traffic group traffic-group-1.
+Jun  5 09:21:38 my.test.local notice sod[8074]: 010c0019:5: Active
+Jun  5 09:21:38 7833-tmm0 notice tmm[16705]: 01340011:5: HA unit 1 state change: from 0 to 1.
+Jun  5 09:22:24 7833-tmm0 notice tmm[16705]: 01220002:6: Re-enabling general logging; held 28 messages.
+Jun  5 09:22:24 7833-tmm0 info tmm[16705]: 01220002:6: Rule /Common/rule1 <HTTP_REQUEST>: In rule1
+Jun  5 09:22:24 7833-tmm0 info tmm[16705]: 01220002:6: Rule /Common/rule1 <HTTP_REQUEST>: Leaving rule1
+Jun  5 09:24:20 my.test.local err mcpd[8518]: 01020037:3: The requested log publisher (/Common/tracer_pub1) already exists.
+Jun  5 09:24:20 my.test.local err tmsh[32270]: 01420006:3: 01020037:3: The requested log publisher (/Common/tracer_pub1) already exists.
+Jun  5 09:24:43 7833-tmm0 info tmm[16705]: iRule profiler is started
+Jun  5 09:24:43 7833-tmm0 info tmm[16705]: 01220002:6: Rule /Common/rule1 <HTTP_REQUEST>: In rule1
+Jun  5 09:24:43 7833-tmm0 info tmm[16705]: 01220002:6: Rule /Common/rule1 <HTTP_REQUEST>: Leaving rule1
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001017,RP_RULE_ENTRY,/Common/vs,/Common/rule1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001054,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001070,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001088,RP_CMD_BYTECODE,/Common/vs,invokeStk1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001119,RP_CMD_ENTRY,/Common/vs,log,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001135,RP_CMD_EXIT,/Common/vs,log,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001177,RP_CMD_BYTECODE,/Common/vs,pop,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001195,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001212,RP_CMD_BYTECODE,/Common/vs,invokeStk1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001244,RP_CMD_ENTRY,/Common/vs,HTTP::uri,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001260,RP_CMD_EXIT,/Common/vs,HTTP::uri,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001294,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001310,RP_CMD_BYTECODE,/Common/vs,ends_with,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001326,RP_CMD_BYTECODE,/Common/vs,jumpFalse1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001343,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001359,RP_CMD_BYTECODE,/Common/vs,pop,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001374,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001390,RP_CMD_BYTECODE,/Common/vs,push1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001407,RP_CMD_BYTECODE,/Common/vs,invokeStk1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001453,RP_CMD_ENTRY,/Common/vs,log,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001469,RP_CMD_EXIT,/Common/vs,log,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001503,RP_CMD_BYTECODE,/Common/vs,done,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0
+Jun  5 09:24:44 7833-tmm0 info tmm[16705]: 1559751884001536,RP_RULE_EXIT,/Common/vs,/Common/rule1,16705,0x94558082822464,10.10.10.2,51778,0,10.10.10.162,80,0

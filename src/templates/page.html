@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+<head>
+	<title>iRules Profiler Visualization GUI</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500&display=swap" rel="stylesheet">	
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<meta name="description" content="iRule GUI">
+	<meta name="keywords" content="iRule GUI">
+</head>
+<body>
+
+
+<ul class="dropme">
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">Documentation Resources</a>
+    <div class="dropdown-content">
+      <a href="/userdocs/">User Docs</a>
+      <a href="/faq/">Frequently Asked Questions</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-1-28899">iRule Execution Tracing and Performance Profiling, Part 1</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-2-28925">iRule Execution Tracing and Performance Profiling, Part 2</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-3-29020">iRule Execution Tracing and Performance Profiling, Part 3</a>
+    </div>
+  </li>
+  <li><a href="/">CampFire</a></li>
+</ul>
+
+
+<div class="description">
+	<p style="font-size: 2.2em; font-weight:500; color: white; text-align: center; padding: 1em 0px 5px 0px; margin:1em 0px 5px 0px; display: block"> CampFire (n): Turning logs into flames.</p>
+        <p style="font-weight: 500; letter-spacing: .7px; font-family: Roboto; font-size: 1.1em; color: white; text-align: center; padding: 0px; margin:0px"> iRules Profiler Visualization Application </p>
+        <hr size="5">
+     	<p>Welcome to CampFire, where your iRule log files are visualized as customized stack trace FlameGraphs. <span style="font-family: Roboto; font-weight:400;"><i>(*Uploaded files must be .txt file)</i><span></p>
+        <hr size="5">
+</div>
+
+
+
+<div class="mainsection">
+
+<center>
+
+<form name="mainform" method=post enctype=multipart/form-data onsubmit="valthisform()">
+
+<p class="fileuploadfilterlabel"> SELECT FLAMEGRAPH OPTION </p>
+<!-- TOGGGGGGLE --->
+<div class="toggleoptions">
+	<ul id="nav-tab" class="nav">
+    		<li><a href="#profile" onclick="return false;" class="tablabel">DIFFERENTIAL FLAMEGRAPH</a></li>
+    		<li><a href="#home" onclick="return false;" class="tablabel">GENERAL FLAMEGRAPH</a></li>
+  	</ul>
+	 <!-- Tab panes -->
+ 	<div class="tab-content">
+		<div class="tab-pane" id="home">
+			<p class="filterlabel">FILE UPLOAD</p>
+                	<p class="valuestylingdescription">Upload the iRule log file you would like to use to create a Flamegraph.</p>
+        		<div class="file1">
+                        	<div class="file1">
+                        		 <input type=file name="file">
+                                </div>
+
+        		</div>
+    		</div>
+    		<div class="tab-pane" id="profile">
+			<p class="filterlabel">FILE UPLOAD</p>
+                        <p class="valuestylingdescription">Upload the iRule log files you would like to compare to create a Differential Flamegraph.</p>
+      			<!--<p class="fileuploaddescription">UPLOAD A BEFORE AND AFTER IRULE LOG FILE TO MAKE A DIFFERENTIAL FLAMEGRAPH</p>--->
+			<div class="diffuploadsdiv">
+				<div class="uploaddiv">
+					<p class="filelabel"><span style="color:#00C9FF; font-weight:400">BEFORE LOG FILE</span></p>
+                        		<input type=file name="file2">
+				</div>
+				<div class="uploaddiv">
+					<p class="filelabel"><span style="color:#0091B1; font-weight:400">AFTER LOG FILE</span></p>
+                        		<input type=file name="file3">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+		<div class="typefilterdiv">
+		<div class= "checkboxstyle" > 
+			<p class="filterlabel"> TYPE FILTERS </p>
+			<ul class="unstyled centered">
+			<li>
+				<div class="checkboxdiv">
+                                <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="EVENT" name="mycheckbox" checked>
+                                	<label for="styled-checkbox-2">Event</label>
+                   		</div> 
+		       </li>
+                        <li>
+				<div class="checkboxdiv">
+                                <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="RULE" name="mycheckbox" checked>
+				<div class="tooltip"> 
+                                	<label for="styled-checkbox-2">Rule</label>
+					<span class="tooltiptext">Rule in TMM</span>
+				</div>
+				</div>
+                        </li>
+                        <li>
+				<div class="checkboxdiv">
+                                <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="RULEVM" name="mycheckbox" checked>
+				<div class="tooltip"> 
+                                	<label for="styled-checkbox-2">RuleVM</label>
+					<span class="tooltiptext">Rule in VM</span>
+				</div>
+				</div>
+                        </li>
+                        <li>
+				<div class="checkboxdiv">
+                                <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="BYTECODE" name="mycheckbox" checked>
+                                <label for="styled-checkbox-2">Bytecode</label>
+                        	</div>
+			</li>
+                        <li>
+				<div class="checkboxdiv">
+                                <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="CMDVM" name="mycheckbox" checked>
+				<div class="tooltip"> 
+                                	<label for="styled-checkbox-2">CMDVM</label>
+					<span class="tooltiptext">Command in VM</span>
+				</div>
+				</div>
+                        </li>
+                        <li>
+				<div class="checkboxdiv">
+                                <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="CMD" name="mycheckbox" checked>
+				<div class="tooltip"> 
+                                	<label for="styled-checkbox-2">CMD</label>
+					<span class="tooltiptext">Command in TMM</span>
+				</div>
+				</div>
+			</li>			
+			</ul>
+	       </div>
+	      </div>
+
+		<!-- Input filter options --->
+		<div class="valuefilterdiv">
+		<p class="filterlabel">VALUE FILTERS</p> 
+		<p class="valuestylingdescriptionhelp">Separate multiple filter parameters by commas.</p> 
+		</div>
+		<div class="valuefilterdiv">
+			<div class="individualvaluefilter">
+		        	<p class="valuefilterstyling">EVENT</p> 
+				<p class="valuefilterhelpdescription"> Filters by the type of event. E.g. HTTP_REQUEST, CLIENT_ACCEPTED </p>
+				<input class="inputfilters" type="text" name="EVENT" placeholder="event1, event2, ..."/>
+        		</div>
+			<br>
+			<div class="individualvaluefilter">
+				<p class="valuefilterstyling"> IRULE </p> 
+				<p class="valuefilterhelpdescription"> For iRule filter, get rid of the first slash, and then replace all remaining '/' with '-'. <br> E.g. if iRule is /Common/rule1 iRule filter input should be Common-rule1 </p>
+				<input class="inputfilters" type="text" name="IRULE" placeholder="irule1, irule2, ..."/>
+			</div>
+			<br>
+			<div class="individualvaluefilter">
+				<p class="valuefilterstyling"> FLOW </p>
+				<p class="valuefilterhelpdescription"> For flow filter, list the remote address first followed by a '-' and then the local address. E.g. 10.0.0.0.162:80:0-10.10.10:127:44:0 </p>
+				<input class="inputfilters" type="text" name="FLOW" placeholder="10.0.0.0.162:80:0-10.10.10:127:44:0, ..."/>
+			</div>
+			<br> 	
+			<div class="individualvaluefilter">
+			       	<p class="valuefilterstyling"> REMOTE </p> 
+				<p class="valuefilterhelpdescription"> Remote filter format is IP Address:port number:routing domain E.g. 10.0.0.0.162:80:0 </p>
+				<input class="inputfilters" type="text" name="REMOTE" placeholder="10.0.0.0.162:80:0, ..."/>
+        		</div>
+			<br>
+			<div class="individualvaluefilter">
+				<p class="valuefilterstyling"> LOCAL </p>
+				<p class="valuefilterhelpdescription"> Local filter format is IP Address:port number:routing domain E.g. 10.10.10:127:44:0 </p>
+				<input class="inputfilters" type="text" name="LOCAL" placeholder="10.10.10:127:44:0, ..."/>
+			</div>
+
+		</div>
+
+		<input type="submit">	</center>
+		</form>
+
+<br>	
+
+
+</div>
+
+
+<script>
+function valthisform()
+{
+    var checkboxs=document.getElementsByName("mycheckbox");
+    var okay=true;
+    for(var i=0,l=checkboxs.length;i<l;i++)
+    {
+        if(checkboxs[i].checked)
+        {
+            okay=false;
+            break;
+        }
+    }
+    if(okay) {
+        alert("Must apply type filter(s).");
+        event.preventDefault();
+    }
+}
+
+/* Let's Build: With JavaScript - Web-Crunch.com
+   Subscribe on YouTube - https://youtube.com/c/webcrunch
+   
+   Let's Build: Dynamic Tabs 
+*/
+
+function onTabClick(event) {
+  let activeTabs = document.querySelectorAll('.active');
+  
+  // deactivate existing active tab and panel
+  // for( let i = 0; i < activeTabs.length; i++) {
+  //   activeTabs[i].className = activeTabs[i].className.replace('active', '');
+  // }
+  
+  activeTabs.forEach(function(tab) {
+    tab.className = tab.className.replace('active', '');
+  });
+  
+  // activate new tab and panel
+  event.target.parentElement.className += ' active';
+  document.getElementById(event.target.href.split('#')[1]).className += ' active';
+}
+
+const element = document.getElementById('nav-tab');
+
+element.addEventListener('click', onTabClick, false);
+
+
+</script>
+
+</body>
+</html>
+
+

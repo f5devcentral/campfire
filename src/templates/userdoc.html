@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+	<title>iRules Profiler Visualization GUI</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500&display=swap" rel="stylesheet">	
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<meta name="description" content="iRule GUI">
+	<meta name="keywords" content="iRule GUI">
+</head>
+<body>
+
+
+<<ul class="dropme">
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">Documentation Resources</a>
+    <div class="dropdown-content">
+      <a href="/userdocs/">User Docs</a>
+      <a href="/faq/">Frequently Asked Questions</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-1-28899">iRule Execution Tracing and Performance Profiling, Part 1</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-2-28925">iRule Execution Tracing and Performance Profiling, Part 2</a>
+      <a href="https://devcentral.f5.com/s/articles/irule-execution-tracing-and-performance-profiling-part-3-29020">iRule Execution Tracing and Performance Profiling, Part 3</a>
+    </div>
+  </li>
+  <li><a href="/">CampFire</a></li>
+</ul>
+
+
+<div class="description">
+	<p style="font-size: 2.2em; font-weight:500; color: white; text-align: center; padding: 1em 0px 5px 0px; margin:1em 0px 5px 0px; display: block"> CampFire User Docs </p>
+</div>
+
+<div class="usermainsection">
+	<p class="faqfilterlabel"> ABOUT CAMPFIRE </p>
+	<p class="faqtext">
+	CampFire helps turn your iRule log files into flame graphs. CampFire is an iRule visualization application that displays data from uploaded BIG-IP logfiles with the goal of 
+	helping users identify areas of performance improvement. This application allows a user to upload iRule log file(s) and 
+	apply filters to produce a flame graph, illustrating a hierarchical stack trace of the code and associated execution time spent in each occurrence. 
+	Users have the option to create general flame graphs based on 1 log file, and/or differential flame graphs based on 2 log files. </p>
+
+	<p class="faqfilterlabel"> ABOUT FLAME GRAPHS </p>
+	<p class="faqtext">
+		Flame graphs are a visualization of profiled software, allowing the most time intensive code paths to be identified quickly and accurately. 
+		As the entire profiler output is visualized at once, the end user can navigate intuitively to areas of interest. The shapes and locations in the flame graphs are visual maps for the execution of software.
+
+		<ul class="faqbulletpoints">
+			<p class="faqfilterlabel"> CHARACTERISTICS OF ALL FLAME GRAPHS </p>
+			<li class="faqbullets"> A stack trace is represented as a column of boxes, where each box represents a function (a stack frame). </li>
+			<li class="faqbullets"> A stack frame is a single box which represents a function call within the flame graph. </li>
+			<li class="faqbullets"> The width of a box indicate the execution time in proportion to the total amount of execution time. </li>
+			<li class="faqbullets"> If the width of the box is sufficient, it displays the full function name. If not, either a truncated function name with an ellipsis is shown, or nothing. </li>
+			<li class="faqbullets"> The color pallet provides no significance and only serves to provide contrast between adjacent boxes. </li>
+		</ul>
+
+		<p class="faqparindentheader"><span style="font-weight:400"> Interactivity </span>
+		<p class="faqparindent"> Flame graphs can support interactive features to reveal more detail, improve navigation, and perform calculations. The original implementation of flame graphs4 creates an SVG image with embedded 
+		JavaScript for interactivity, which is then loaded in a browser. It supports three interactive features: Mouse-over for information, click to zoom, and search.</p>
+
+		<p class="faqparindentheader"><span style="font-weight:400"> Mouse-over for information </span>
+		<p class="faqparindent"> On mouse-over of boxes, an informational line below the flame graph and a tooltip display the full function name, the number of samples present in the profile which in our application is 
+		equal to the amount of microseconds, and the corresponding percentage of the amount of execution time of the function over the amount of total execution time of the iRule script. The percentage quantifies code paths 
+		in the profile, which helps the user prioritize leads and estimate improvements from proposed changes. <br>
+		Ex = Function: EVENT-HTTP_REQUEST (61,244 samples, 37.76%) </p>
+		<center><img src="/static/hover.png" height="150" width="815"></center> 
+
+		<p class="faqparindentheader"><span style="font-weight:400"> Click to zoom </span>
+		<p class="faqparindent"> When a box is clicked, the flame graph zooms horizontally. This reveals more detail, and often function names for the child functions. Ancestor frames below the clicked box are shown with a 
+		faded background as a visual clue that their widths are now only partially shown. A Reset Zoom button is included to return to the original full profile view in the top left corner. 
+		Clicking any box while zoomed will reset the zoom to focus on that new box. </p>
+		<center><img src="/static/reset.png" height="150" width="815"></center> 
+
+		<p class="faqparindentheader"><span style="font-weight:400"> Search </span></p>
+		<p class="faqparindent"> A search button or keystroke (Ctrl-F) prompts the user for a search term, which can include regular expressions. All function names in the profile are searched, and any matched boxes are 
+		highlighted with magenta backgrounds. The sum of matched stack traces is also shown on the flame graph as a percentage of the total profile. Search input is caps lock sensitive. </p>
+		<center><img src="/static/search.png" height="150" width="815"></center> 
+
+	<br>
+	<p class="faqfilterlabel"> GENERAL FLAMEGRAPH </p>
+	<p class="faqtext"> If you choose to create a General Flame Graph, 2 types of flame graphs will be created: a flame graph displaying combined calls and a flame graph displaying sequential calls. The images below show the 2 types of flame graphs
+	created from the same uploaded iRule log file. Notice how in the first image, the general flame graph for combined calls groups together all the same function calls made and displays them as 1 rectangle, while the general flame graph
+	for sequential calls displays each call in sequential order and separates each individual call into separate rectangles. </p>
+		<p class="faqparindentheader"><span style="font-weight:500"> GENERAL FLAMEGRAPH FOR COMBINED CALLS </span></p>
+		<p class="faqparindent"> The x-axis shows the stack trace of the uploaded iRule script, sorted alphabetically (it is not in chronological order), and the y-axis shows stack depth. 
+		Each rectangle represents a stack frame/function call. The flame graph for combined calls sums together the execution times of like calls and displays that sum as a single stack frame.
+		The width of the stack frame indicates the time execution of the combined calls in proportion to the overall time execution of the iRule script. </p>		
+		<center><img src="/static/combined.png" height="105" width="840"></center>
+		<p class="faqparindentheader"><span style="font-weight:500"> GENERAL FLAMEGRAPH FOR SEQUENTIAL CALLS </span></p>
+		<p class="faqparindent"> The x-axis shows the stack trace of the uploaded iRule script, displaying the code paths in the sequence in which they are called in the iRule script program (it is in chronological order), and the 
+		y-axis shows stack depth. Each rectangle represents a stack frame/function call. Starting at the base, you can follow the parent-child relationship in the various code paths. The width of the 
+		frame indicates the time execution that specific stack frame takes in proportion to the overall time execution of the iRule script. </p>
+		<center><img src="/static/separated.png" height="105" width="840"></center>
+
+	<p class="faqfilterdifflabel"> DIFFERENTIAL FLAME GRAPH </p>
+	<p class="faqtext">
+	Differential flame graphs help display performance differences between 2 sets of iRule profiler log data. By uploading a before and after log file, a differential flame graph takes a normal flame graph 
+	and then uses colors to show the difference between two profiles: red to convey an increase in time execution, and blue for a decrease in time execution for each function call.
+	If you choose to create a Differential Flame Graph, 3 types of flame graphs will be created: a before differential flame graph, an after differential flame graph, and a change only differential flame graph. 
+	All differential flame graphs display combined function calls. 
+	</p>
+
+	<ul class="faqbulletpoints">
+			<p class="faqfilterlabel"><span style="font-weight:400"> COLOR SIGNIFICANCE FOR ALL DIFFERENTIAL FLAME GRAPHS </span></p>
+			<li class="faqbullets"> Blue = time execution decrease relative to the function call in the other file. </li>
+                        <li class="faqbullets"> Red = time execution increase relative to the function call in the other file. </li>
+                        <li class="faqbullets"> White = no change in time execution relative to the function call in the other file. </li>
+                        <li class="faqbullets"> Saturation of color indicates levels of changes [lighter shade is less change, darker shade is more change]. </li>
+        </ul>
+
+	<p class="faqparindentheader"><span style="color:#00C9FF;font-weight:500"> BEFORE DIFFERENTIAL </span></p>
+	<p class="faqparindent"> The before differential compares the function calls in the before log file to the function calls in the after log file, and uses colors to signal if the time 
+	execution for each function call decreased, increased or remained the same. </p>
+		<ul class="faqbulletpoints"><p class="faqfilterlabel"><span style="color:#00C9FF;font-weight:400"> COLOR SIGNIFICANCE FOR BEFORE DIFFERENTIAL FLAME GRAPHS </span></p>
+			<li class="faqbullets"> If the stack frame is blue, that means the function call in the before log file has a shorter execution time than the same function call in the after log file. 
+			This means the execution time of the function call increased in the after log file. </li>
+                        <li class="faqbullets"> If the stack frame is red, that means the function call in the before log file has a greater execution time than the same function call in the after log file. 
+			This means the execution time of the function call decreased in the after log file. </li>
+                        <li class="faqbullets"> If the stack frame is white, that means there was no change in execution time. </li>
+        	</ul>
+
+	<p class="faqparindentheader"><span style="font-weight:500;color:#0091B1"> AFTER DIFFERENTIAL </span></p>
+	<p class="faqparindent"> The after differential compares the function calls in the after log file to the function calls in the before log file, and uses colors to signal if the time execution 
+	for each function call decreased, increased or remained the same. </p>
+        	<ul class="faqbulletpoints">
+			<p class="faqfilterlabel"><span style="color:#0091B1;font-weight:400"> COLOR SIGNIFICANCE FOR AFTER DIFFERENTIAL FLAME GRAPHS </span></p>
+			<li class="faqbullets"> If the stack frame is blue, that means the function call in the after log file has a shorter execution time than the same function call in the before log file. 
+			This means the execution time of the function call decreased in the after log file. </li>
+                        <li class="faqbullets"> If the stack frame is red, that means the function call in the after log file has a greater execution time than the same function call in the before log file. 
+			This means the execution time of the function call increased in the after log file. </li>
+                        <li class="faqbullets"> If the stack frame is white, that means there was no change in execution time. </li>
+        </ul>
+
+	<p class="faqparindentheader"><span style="font-weight:500; color:#004B79"> CHANGE ONLY DIFFERENTIAL </span></p>
+	<p class="faqparindent"> Colors are the same as the after differential flame graph but adjusts the frame to focus on function calls where the execution times have changed. Function calls where execution times have 
+	not changed are excluded from the change only differential flame graph. </p>	
+	<center><img src="/static/differentialscreenshot.png" height="275" width="825"></center> 
+
+	<p class="faqfilterlabel"> HOW TO USE CAMPFIRE</p>
+		<ul class="faqbulletpoints">
+			<p class="faqfilterlabel"><span style="font-weight:400"> PRE-PROCESSED DATA/ALLOWED FILE INPUTS </span></p>
+			<li class="faqbullets"> iRule log files can be uploaded as is without any pre-processing. </li>
+                        <li class="faqbullets"> Uploaded iRule log files must be .txt files, all other file formats will result in invalid outputs. </li>
+                        <li class="faqbullets"> Failure to do any of the following will prompt the window to refresh back to the main screen: </li>
+				<ul class="faqbulletpoints">
+					<li class="faqbullets"> If differential flame graph option, must upload a before log file and after log file. </li>
+					<li class="faqbullets"> If general flame graph option, must upload 1 log file. </li>
+				</ul>
+        </ul>
+
+	<p class="faqparindentheader"><span style="font-weight:400"> FILTERING OPTIONS </span></p>
+	<p class="faqparindent"> Users have the option to select specific type and value filters to apply to their input data. Keep in mind your iRule log script .txt file might already have a layer of filtration 
+	where some type filters have been applied. To avoid creating an empty data set, make sure you know which filters have been applied for future data filtration. </p>
+	
+	<ul class="faqbulletpoints">
+		<p class="faqfilterlabel"><span style="font-weight:400"> TYPE FILTERS </span></p>
+                        <li class="faqbullets"> Event </li>
+                        <li class="faqbullets"> Rule – rule in TMM </li>
+                        <li class="faqbullets"> RuleVM – rule in VM </li>
+                        <li class="faqbullets"> Bytecode – *Note: This option requires at least one of EVENT, RULE or RULEVM. </li>
+                        <li class="faqbullets"> CMDVM – command in VM </li>
+                        <li class="faqbullets"> CMD – command in TMM </li>
+        </ul>
+	<br>
+	<ul class="faqbulletpoints">
+		<p class="faqfilterlabel"><span style="font-weight:400"> VALUE FILTERS </span></p>
+		<p class="faqtextnomargin">If you do not wish to filter by any values, simply leave them blank. If you wish to filter by more than one value, your inputs must be separated by commas.  Keep in mind inputs are case sensitive.
+		<li class="faqbullets"> Eventval: Filters by the type of event. E.g. HTTP_REQUEST, CLIENT_ACCEPTED </li>
+
+                <li class="faqbullets"> iRule: Filters by the irule. E.g. /Common/rule1, /Common/myrule2 </li>
+                <li class="faqbulletsbottompadding"> To input an iRule filter, the form requires the syntax to be changed by getting rid of the first slash, and then replacing all remaining '/' with '-'. For example if the iRule is /Common/rule1
+		this should be entered as Common-rule1 </li>
+		<li class="faqbullets"> Flow: Filters by connection by combining remote and local addresses. E.g. 10.0.0.0.162:80:0-10.10.10:127:44:0 </li>
+		<li class="faqbulletsbottompadding"> List the remote address first followed by a '-' and then the local address. </li>
+                <li class="faqbullets"> Remote: Filters by the source address for a connection. E.g. 10.0.0.0.162:80:0</li>
+		<li class="faqbulletsbottompadding"> The syntax for remote is formatted by the IPaddress:portnumber:routingdomain </li>
+                <li class="faqbullets"> Local: filters by the destination address of a connection. E.g. 10.10.10:127:44:0 </li>
+		<li class="faqbulletsbottompadding"> The syntax for local is formatted by the IPaddress:portnumber:routingdomain </li>
+	
+		<p class="faqtextnomargin"> The combination of multiple filters follows the logic: (eventval1 OR eventval2 OR eventval3…) AND (irule1 OR irule2 OR irule3…) AND (remote1 OR remote2…) AND (local1 OR local2…) AND (flow1 OR flow2) 
+		<br><br> For example if the following values are searched for in each: </p>
+		<li class="faqbullets"> Eventval: HTTP_REQUEST </li>
+		<li class="faqbullets"> Irule: Common-rule1, Common-rule8 </li>
+		<li class="faqbullets"> Flow: </li>
+		<li class="faqbullets"> Remote: 10.0.0.0.162:80:0 </li>
+		<li class="faqbullets"> Local: 10.10.10:127:44:0, 10.24.0.274:1088:0 </li>
+		<p class="faqtextnomargin"> The resulting Flame Graph will only contain those occurrences which pass these criteria or have a child which passes these criteria 
+		(this is done to preserve hierarchy of calls). For an occurrence to pass this filter criteria it must be within an HTTP_REQUEST, and belong to either /Common/rule1 or /Common/rule8, 
+		and have the above remote address, and have either of the above local addresses. </p>
+        </ul>
+	<p class="faqparindentheader"><span style="font-weight:400"> EXPECTED OUTPUTS </span></p>
+		<p class="faqparindentnomargin"><span style="font-weight:400"> Input: </span> 1 log .txt file </p>
+		<p class="faqparindentbottompadding"><span style="font-weight:400"> Output: </span> 2 Flame Graphs = 1 general flame graph for combined calls and 1 general flame graph for sequential calls </p>
+		<p class="faqparindentnomargin"><span style="font-weight:400"> Input: </span> 2 log .txt file </p>
+		<p class="faqparindentbottompadding"><span style="font-weight:400"> Output: </span> 6 Flame Graphs =  1 general flame graph for combined calls and 1 general flame graph for sequential calls for the before iRule log file, 
+		1 general flame graph for combined calls and 1 general flame graph for sequential calls for the after iRule log file, and 1 before differential flame graph, 1 after differential flame graph, and 1 change only differential
+		flame graph. </p>
+		<p class="faqparindentnomargin"><span style="font-weight:400"> Input: </span> Empty .txt file </p>
+		<p class="faqparindentbottompadding"><span style="font-weight:400"> Output: </span> Screen will display 'Invalid input, no Flamegraph created'. Any attempts to download an svg or png file will result in a file that 
+		also displays: 'Invalid input, no Flamegraph created.' </p>
+		<p class="faqparindentnomargin"><span style="font-weight:400"> Input: </span> Not a .txt file </p>
+		<p class="faqparindentbottompadding"><span style="font-weight:400"> Output: </span> The window will refresh, application will not allow you to move forward until a valid upload. </p>	
+
+	<p class="faqfilterlabel"> ADDITIONAL RESOURCES </p>
+	<p class="faqtext"> Read more about Flamegraphs: <a href="http://www.brendangregg.com/flamegraphs.html"> http://www.brendangregg.com/flamegraphs.html </a></p>
+	<p class="faqtext"> Read more about Differential Flamegraphs: <a href="http://www.brendangregg.com/blog/2014-11-09/differential-flame-graphs.html"> http://www.brendangregg.com/blog/2014-11-09/differential-flame-graphs.html </a></p>
+</div>
+</body>
+</html>
+

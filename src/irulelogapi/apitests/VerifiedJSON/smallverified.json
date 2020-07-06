@@ -1,0 +1,87 @@
+[
+    {
+        "ID": "StructLogs/(2019-07-17--22-39-31.233705).1",
+        "info": {
+            "entrytime": "1560921606677237",
+            "occtype": "EVENT",
+            "virtserver": "/Common/vs",
+            "occvalue": "HTTP_REQUEST",
+            "tmmpid": "23035",
+            "flowid": "0x94558049268032",
+            "remote": {
+                "ip": "10.10.10.2",
+                "port": "33202",
+                "routdomain": "0"
+            },
+            "local": {
+                "ip": "10.10.10.162",
+                "port": "80",
+                "routdomain": "0"
+            },
+            "exittime": "1560921606677340",
+            "rawexectime": null,
+            "sumchildren": null,
+            "realexectime": null,
+            "irule": null
+        },
+        "varData": [],
+        "nest": []
+    },
+    {
+        "ID": "StructLogs/(2019-07-17--22-39-31.233705).2",
+        "info": {
+            "entrytime": "1560921756918283",
+            "occtype": "EVENT",
+            "virtserver": "/Common/vs",
+            "occvalue": "HTTP_REQUEST",
+            "tmmpid": "23035",
+            "flowid": "0x94558049267584",
+            "remote": {
+                "ip": "10.10.10.2",
+                "port": "45162",
+                "routdomain": "0"
+            },
+            "local": {
+                "ip": "10.10.10.162",
+                "port": "80",
+                "routdomain": "0"
+            },
+            "exittime": "1560921756918883",
+            "rawexectime": null,
+            "sumchildren": null,
+            "realexectime": null,
+            "irule": null
+        },
+        "varData": [],
+        "nest": [
+            {
+                "ID": "StructLogs/(2019-07-17--22-39-31.233705).2.1",
+                "info": {
+                    "entrytime": "1560921756918298",
+                    "occtype": "RULE",
+                    "virtserver": "/Common/vs",
+                    "occvalue": "/Common/rule1",
+                    "tmmpid": "23035",
+                    "flowid": "0x94558049267584",
+                    "remote": {
+                        "ip": "10.10.10.2",
+                        "port": "45162",
+                        "routdomain": "0"
+                    },
+                    "local": {
+                        "ip": "10.10.10.162",
+                        "port": "80",
+                        "routdomain": "0"
+                    },
+                    "exittime": "1560921756918870",
+                    "rawexectime": null,
+                    "sumchildren": null,
+                    "realexectime": null,
+                    "irule": "/Common/rule1"
+                },
+                "varData": [],
+                "nest": []
+            }
+        ]
+    }
+]

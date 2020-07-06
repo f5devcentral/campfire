@@ -1,0 +1,58 @@
+[
+    {
+        "ID": "StructLogs/(2019-07-18--17-50-45.492008).1",
+        "info": {
+            "entrytime": "1560921756918522",
+            "occtype": "VAR_MOD",
+            "virtserver": "/Common/vs",
+            "occvalue": "n=100",
+            "tmmpid": "23035",
+            "flowid": "0x94558049267584",
+            "remote": {
+                "ip": "10.10.10.2",
+                "port": "45162",
+                "routdomain": "0"
+            },
+            "local": {
+                "ip": "10.10.10.162",
+                "port": "80",
+                "routdomain": "0"
+            },
+            "exittime": null,
+            "rawexectime": null,
+            "sumchildren": null,
+            "realexectime": null,
+            "irule": "/Common/rule1" 
+        },
+        "varData": [],
+        "nest": []
+    },
+    {
+        "ID": "StructLogs/(2019-07-18--17-50-45.492008).2",
+        "info": {
+            "entrytime": "1560921756918721",
+            "occtype": "VAR_MOD",
+            "virtserver": "/Common/vs",
+            "occvalue": "n=101",
+            "tmmpid": "23035",
+            "flowid": "0x94558049267584",
+            "remote": {
+                "ip": "10.10.10.2",
+                "port": "45162",
+                "routdomain": "0"
+            },
+            "local": {
+                "ip": "10.10.10.162",
+                "port": "80",
+                "routdomain": "0"
+            },
+            "exittime": null,
+            "rawexectime": null,
+            "sumchildren": null,
+            "realexectime": null,
+            "irule": "/Common/rule1" 
+        },
+        "varData": [],
+        "nest": []
+    }
+]

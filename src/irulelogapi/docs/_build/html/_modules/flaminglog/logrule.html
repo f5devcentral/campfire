@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>flaminglog.logrule &mdash; irulelogapi 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> irulelogapi
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">irulelogapi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>flaminglog.logrule</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for flaminglog.logrule</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">from</span> <span class="nn">cairosvg</span> <span class="k">import</span> <span class="n">svg2png</span>
+
+
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">NestNode</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">LogicNode</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">initHelp</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">getByIDHelp</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">svgHelp</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">queryHelp</span>
+
+<div class="viewcode-block" id="make_json"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.make_json">[docs]</a><span class="k">def</span> <span class="nf">make_json</span><span class="p">(</span><span class="n">inputFile</span><span class="p">,</span> <span class="n">wantedOccList</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the output trace from the iRule profiler into a JSON formatted</span>
+<span class="sd">    list. Strucutres and organizes the data in the passed iRule log file. If</span>
+<span class="sd">    wantedOccList is None all occ-types are kept. Otherwise only those which are</span>
+<span class="sd">    included in wantedOccList are kept.\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inputFile: String</span>
+<span class="sd">        The path aand name of the input iRule log file</span>
+<span class="sd">    wantedOccList: List[String]</span>
+<span class="sd">        (Default Value = None) A list of the wanted occ-types. Will keep those</span>
+<span class="sd">        types which are in the list and filter out all others. Valid inputs in</span>
+<span class="sd">        the list include: EVENT, RULE, RULEVM, BYTECODE, CMDVM, CMD,VAR_MOD</span>
+<span class="sd">    Return</span>
+<span class="sd">    ----------</span>
+<span class="sd">    outName: String</span>
+<span class="sd">        The path and name of a JSON file which contains the contents of the</span>
+<span class="sd">        structured and orgnaized data</span>
+<span class="sd">    outList: List[Dictionary]</span>
+<span class="sd">        Contains identical contents to outName but is in list form</span>
+<span class="sd">    errorCode: int</span>
+<span class="sd">        Indicated whether the data was successfully converted. If successful</span>
+<span class="sd">        errorCode=0. Otherwise will output a custom errorCode.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#if no queryStr is given then returns all content unfiltered</span>
+    <span class="c1">#handles if wantedOccList is passed as a string with list content</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">wantedOccList</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wantedOccList</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="n">wantedOccList</span> <span class="o">=</span> <span class="n">wantedOccList</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">wantedOccList</span> <span class="o">=</span> <span class="n">wantedOccList</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">wantedOccList</span> <span class="o">=</span> <span class="n">wantedOccList</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">wantedOccList</span> <span class="o">=</span> <span class="n">wantedOccList</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">wantedOccList</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">pass</span>
+
+    <span class="k">elif</span><span class="p">(</span><span class="n">wantedOccList</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">typeStr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">wantedOccList</span><span class="p">))</span>
+        <span class="n">errStr</span> <span class="o">=</span> <span class="n">typeStr</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot; object is not of type list or str:&quot;</span>
+                <span class="s2">&quot; wantedOccList must be of type list or str&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errStr</span><span class="p">)</span>
+
+    <span class="n">validOccListVals</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;EVENT&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;RULE&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;RULEVM&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;BYTECODE&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;CMDVM&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;CMD&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;VAR_MOD&#39;</span>
+    <span class="p">]</span>
+    
+    <span class="c1">#checks that all values wanted are valid</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">wantedOccList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">occ</span> <span class="ow">in</span> <span class="n">wantedOccList</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">occ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">validOccListVals</span><span class="p">):</span>
+                <span class="n">errStr</span> <span class="o">=</span> <span class="n">occ</span> <span class="o">+</span> <span class="s1">&#39; :is not a valid entry in wantedOccList&#39;</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errStr</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">wantedOccList</span> <span class="ow">is</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+        <span class="n">wantedOccList</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;EVENT&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;RULE&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;RULEVM&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;BYTECODE&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;CMDVM&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;CMD&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;VAR_MOD&#39;</span>
+        <span class="p">]</span>
+    
+
+    <span class="n">errorCode</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#initialize variables</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rawLogHandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">inputFile</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="n">errStr</span> <span class="o">=</span> <span class="n">inputFile</span> <span class="o">+</span> <span class="s1">&#39;:was not found&#39;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errStr</span><span class="p">)</span>
+
+    <span class="n">logHandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;plog.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+
+    <span class="n">grepList</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;,RP_EVENT_ENTRY,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_EVENT_EXIT,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_RULE_ENTRY,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_RULE_EXIT,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_RULE_VM_ENTRY,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_RULE_VM_EXIT,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_CMD_VM_ENTRY,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_CMD_VM_EXIT,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_CMD_ENTRY,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_CMD_EXIT,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_CMD_BYTECODE,&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;,RP_VAR_MOD,&#39;</span>
+    <span class="p">]</span>
+    <span class="n">grepString</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">grepList</span><span class="p">)</span>
+    <span class="n">getTracerProc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;grep&#39;</span><span class="p">,</span> <span class="s1">&#39;-E&#39;</span><span class="p">,</span> <span class="n">grepString</span><span class="p">],</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">rawLogHandle</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">logHandle</span>
+    <span class="p">)</span>
+
+    <span class="n">getTracerProc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+    <span class="n">logHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">rawLogHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">logHandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;plog.txt&#39;</span><span class="p">)</span>
+
+    <span class="n">beginTraceFound</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">allDicts</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1">#will contain all data in unnested form</span>
+
+    <span class="c1">#used to help organize pairs since bytecode doesn&#39;t have one</span>
+    <span class="n">levelCheckDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;EVENT&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;RULE&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;RULEVM&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;BYTECODE&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;VAR_MOD&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;CMDVM&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;CMD&#39;</span><span class="p">:</span><span class="kc">False</span>
+    <span class="p">}</span>
+
+    <span class="c1">#used to organize data from log file</span>
+    <span class="n">sampleDict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;entrytime&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;occtype&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;virtserver&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;occvalue&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;tmmpid&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;flowid&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;remote&#39;</span><span class="p">:{</span><span class="s1">&#39;ip&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;routdomain&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">},</span>
+        <span class="s1">&#39;local&#39;</span><span class="p">:{</span><span class="s1">&#39;ip&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;routdomain&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">},</span>
+        <span class="s1">&#39;exittime&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;rawexectime&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;sumchildren&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;realexectime&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;irule&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;eventval&#39;</span><span class="p">:</span><span class="kc">None</span>
+    <span class="p">}</span>
+
+    <span class="c1">#creates output file and names it appropriately</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">initHelp</span><span class="o">.</span><span class="n">_generate_filename</span><span class="p">(</span><span class="n">wantedOccList</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+    
+    <span class="n">bytecodeLevel</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">varLevel</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">currentRule</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">currentEvent</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">entryExitCount</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;EVENT&#39;</span><span class="p">:{</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NumExit&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+            <span class="s1">&#39;RULE&#39;</span><span class="p">:{</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NumExit&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+            <span class="s1">&#39;RULEVM&#39;</span><span class="p">:{</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NumExit&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+            <span class="s1">&#39;CMDVM&#39;</span><span class="p">:{</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NumExit&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+            <span class="s1">&#39;CMD&#39;</span><span class="p">:{</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NumExit&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">#iterates through the log file</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">logHandle</span><span class="p">:</span>
+
+        <span class="k">if</span><span class="p">((</span><span class="s2">&quot;ENTRY&quot;</span> <span class="ow">in</span>  <span class="n">line</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="s2">&quot;BYTECODE&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="s2">&quot;VAR_MOD&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="o">|</span>
+                <span class="n">beginTraceFound</span><span class="p">):</span>
+
+            <span class="n">beginTraceFound</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1">#parses line, and takes off edge spaces</span>
+            <span class="n">traceLine</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">checkerDict</span> <span class="o">=</span> <span class="n">sampleDict</span>
+            <span class="c1">#formats data into dictionary</span>
+            <span class="n">commaCount</span> <span class="o">=</span> <span class="n">traceLine</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">commaCount</span> <span class="o">&gt;</span> <span class="mi">11</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">logHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">handle_error</span><span class="p">(</span><span class="mi">1002</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1002</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">commaCount</span> <span class="o">&lt;</span> <span class="mi">11</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">logHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">handle_error</span><span class="p">(</span><span class="mi">1003</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1003</span>
+
+
+            <span class="n">initHelp</span><span class="o">.</span><span class="n">_populate_dict</span><span class="p">(</span><span class="n">checkerDict</span><span class="p">,</span><span class="n">traceLine</span><span class="p">)</span>
+            
+            <span class="c1">#sets the irule field of the dictionary for each occurrence</span>
+            <span class="k">if</span><span class="p">(</span><span class="s1">&#39;RULE&#39;</span> <span class="ow">in</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occtype&#39;</span><span class="p">]):</span>
+                <span class="n">currentRule</span> <span class="o">=</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occvalue&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="s1">&#39;EVENT&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occtype&#39;</span><span class="p">]):</span>
+                <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;irule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currentRule</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;irule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1">#sets the eventval of the dictionary for each occurrence</span>
+            <span class="k">if</span><span class="p">(</span><span class="s1">&#39;EVENT&#39;</span> <span class="ow">in</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occtype&#39;</span><span class="p">]):</span>
+                <span class="n">currentEvent</span> <span class="o">=</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occvalue&#39;</span><span class="p">]</span>
+            <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;eventval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currentEvent</span>
+
+            <span class="n">tempOccStr</span> <span class="o">=</span> <span class="n">initHelp</span><span class="o">.</span><span class="n">_trim_occ_str</span><span class="p">(</span><span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occtype&#39;</span><span class="p">])</span>
+
+            <span class="n">levelCheckDict</span><span class="p">[</span><span class="n">tempOccStr</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1">#keeps track of number of entries and exits per type</span>
+            <span class="k">if</span><span class="p">((</span><span class="n">tempOccStr</span> <span class="o">!=</span> <span class="s1">&#39;BYTECODE&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">tempOccStr</span> <span class="o">!=</span> <span class="s1">&#39;VAR_MOD&#39;</span><span class="p">)):</span>
+                <span class="k">if</span><span class="p">(</span><span class="s1">&#39;ENTRY&#39;</span> <span class="ow">in</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occtype&#39;</span><span class="p">]):</span>
+                    <span class="n">entryExitCount</span><span class="p">[</span><span class="n">tempOccStr</span><span class="p">][</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span><span class="p">(</span><span class="s1">&#39;EXIT&#39;</span> <span class="ow">in</span> <span class="n">checkerDict</span><span class="p">[</span><span class="s1">&#39;occtype&#39;</span><span class="p">]):</span>
+                    <span class="n">entryExitCount</span><span class="p">[</span><span class="n">tempOccStr</span><span class="p">][</span><span class="s1">&#39;NumExit&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+
+            <span class="c1">#only appends formatted dict if part of wanted occurrences</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">wantedOccList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+                <span class="c1">#tempOccStr = initHelp._trim_occ_str(checkerDict[&#39;occtype&#39;])</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">tempOccStr</span> <span class="ow">in</span> <span class="n">wantedOccList</span><span class="p">):</span>
+                    <span class="n">allDicts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">checkerDict</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">allDicts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">checkerDict</span><span class="p">))</span>
+
+    <span class="c1">#checks the final entry exit counts, imbalance returns error code 1000</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">entryExitCount</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">entryExitCount</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;NumEntry&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">entryExitCount</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;NumExit&#39;</span><span class="p">]):</span>
+            <span class="n">logHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">handle_error</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1000</span>
+    
+    <span class="n">levelSetter</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;EVENT&#39;</span><span class="p">:[],</span>
+            <span class="s1">&#39;RULE&#39;</span><span class="p">:[</span><span class="s1">&#39;EVENT&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;RULEVM&#39;</span><span class="p">:[</span><span class="s1">&#39;EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;RULE&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;BYTECODE&#39;</span><span class="p">:[</span><span class="s1">&#39;EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;RULEVM&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;CMDVM&#39;</span><span class="p">:[</span><span class="s1">&#39;EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;RULEVM&#39;</span><span class="p">,</span> <span class="s1">&#39;BYTECODE&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;CMD&#39;</span><span class="p">:[</span><span class="s1">&#39;EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;RULEVM&#39;</span><span class="p">,</span> <span class="s1">&#39;BYTECODE&#39;</span><span class="p">,</span> <span class="s1">&#39;CMDVM&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;VAR_MOD&#39;</span><span class="p">:[</span><span class="s1">&#39;EVENT&#39;</span><span class="p">,</span> <span class="s1">&#39;RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;RULEVM&#39;</span><span class="p">,</span> <span class="s1">&#39;BYTECODE&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="n">levelDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;EVENT&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;RULE&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;RULEVM&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;BYTECODE&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;CMDVM&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;CMD&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;VAR_MOD&#39;</span><span class="p">:</span><span class="kc">None</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">levelDict</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">((</span><span class="n">levelCheckDict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">wantedOccList</span><span class="p">)):</span>
+            <span class="n">levelDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">occ</span> <span class="ow">in</span> <span class="n">levelSetter</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">levelCheckDict</span><span class="p">[</span><span class="n">occ</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="n">occ</span> <span class="ow">in</span> <span class="n">wantedOccList</span><span class="p">)):</span>
+                        <span class="n">levelDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">levelDict</span><span class="p">[</span><span class="s1">&#39;BYTECODE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">logHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">(</span><span class="mi">1004</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1004</span>
+
+    <span class="c1">#forms nested occurrence structure</span>
+    <span class="n">rootNode</span> <span class="o">=</span> <span class="n">NestNode</span><span class="o">.</span><span class="n">NestNode</span><span class="p">()</span>
+    <span class="n">dataList</span><span class="p">,</span> <span class="n">errorCode</span> <span class="o">=</span> <span class="n">initHelp</span><span class="o">.</span><span class="n">_create_nest</span><span class="p">(</span><span class="n">rootNode</span><span class="p">,</span> <span class="n">allDicts</span><span class="p">,</span> <span class="n">levelDict</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    
+    <span class="n">logHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">errorCode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">handle_error</span><span class="p">(</span><span class="n">errorCode</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">errorCode</span>
+
+    <span class="k">return</span> <span class="n">filename</span><span class="p">,</span> <span class="n">dataList</span><span class="p">,</span> <span class="n">errorCode</span></div>
+
+<div class="viewcode-block" id="cleanup"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.cleanup">[docs]</a><span class="k">def</span> <span class="nf">cleanup</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes all files created by the API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">filesToDelete</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;static/myflame1Combined.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myflame1Separate.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myflame2Combined.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myflame2Separate.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/diff1.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/diff2.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/onlydiff.svg&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myfold1Com.folded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myfold1Sep.folded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myfold2Com.folded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/myfold2Sep.folded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;static/halfFold.folded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;plog.txt&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="c1">#removes all temp logs</span>
+    <span class="k">for</span> <span class="n">myfile</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;StructLogs/&#39;</span><span class="p">):</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;StructLogs/&#39;</span><span class="p">,</span> <span class="n">myfile</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+
+    <span class="k">for</span> <span class="n">myfile</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">myfile</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">myfile</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="remove_png_files"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.remove_png_files">[docs]</a><span class="k">def</span> <span class="nf">remove_png_files</span><span class="p">(</span><span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removed all png files from the given folder. If no folder is specified the</span>
+<span class="sd">    current working directory will be used\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folder: String</span>
+<span class="sd">        (Default Value = &#39;.&#39;) The folder from which all .png files will be</span>
+<span class="sd">        deleted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">folder</span> <span class="o">!=</span> <span class="s1">&#39;.&#39;</span><span class="p">):</span>
+        <span class="n">folder</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span>
+
+    <span class="k">for</span> <span class="n">myfile</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">myfile</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">myfile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_svg"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.make_svg">[docs]</a><span class="k">def</span> <span class="nf">make_svg</span><span class="p">(</span><span class="n">contentVar1</span><span class="p">,</span> <span class="n">contentVar2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates Flame Graphs based on JSON formatted content passed to it. If</span>
+<span class="sd">    contentVar2 is None then 2 Flame Graphs will be created. One showing a view</span>
+<span class="sd">    where function calls with the same name are combined into a single box. And</span>
+<span class="sd">    another where each individual call is separated no matter what and the</span>
+<span class="sd">    calls are all in chronological order. If another list is passed in</span>
+<span class="sd">    contentVar2 then 7 different Flame Graphs are created. See README for more</span>
+<span class="sd">    details.\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    contentVar1: List[Dictionary]</span>
+<span class="sd">        The JSON formatted content of before set of data if contentVar 2 is</span>
+<span class="sd">        passed. If contentVar2 is None then it will be the only dataset.</span>
+<span class="sd">    contentVar2: List[Dictionary]</span>
+<span class="sd">        (Default Value = None) The JSON formatted content of the after dataset</span>
+<span class="sd">    Return</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exitBool: Boolean</span>
+<span class="sd">        True if the Flame Graphs were succesfully created. False otherwise</span>
+<span class="sd">    fileDict: Dictionary</span>
+<span class="sd">        Each key is the name and path of the generated .svg files. The value of</span>
+<span class="sd">        each key is the contents of that file as a String. The default value</span>
+<span class="sd">        with each key is None. If a file is not created in that run of make_svg</span>
+<span class="sd">        its associated value will be None in fileDict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span><span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">contentVar1</span><span class="p">,</span> <span class="nb">list</span><span class="p">))):</span>
+        <span class="n">errmsg</span> <span class="o">=</span> <span class="s2">&quot;Passed value must be a list&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">contentVar2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">contentVar2</span><span class="p">,</span> <span class="nb">list</span><span class="p">))):</span>
+            <span class="n">errmsg</span> <span class="o">=</span> <span class="s2">&quot;Passed value must be a list&quot;</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
+
+    <span class="c1">#compute path to call flamegraph</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">filePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">cwd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">filePath</span> <span class="o">=</span> <span class="n">filePath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    
+    <span class="n">finalPath</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">filePath</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cwd</span><span class="p">:</span>
+            <span class="n">finalPath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">finalPath</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">finalPath</span><span class="p">)</span>
+    <span class="n">finalPath</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span> <span class="o">+</span> <span class="n">finalPath</span> <span class="o">+</span> <span class="s1">&#39;/FlameGraph/&#39;</span>
+
+    <span class="n">flameCmd</span> <span class="o">=</span> <span class="n">finalPath</span> <span class="o">+</span> <span class="s1">&#39;flamegraph.pl&#39;</span>
+    <span class="n">diffCmd</span> <span class="o">=</span> <span class="n">finalPath</span> <span class="o">+</span> <span class="s1">&#39;difffolded.pl&#39;</span>
+
+    <span class="n">defaultFlameOptions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;--minwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">]</span>
+
+    <span class="n">beforeFoldNameCom</span> <span class="o">=</span> <span class="s1">&#39;static/myfold1Com.folded&#39;</span>
+    <span class="n">beforeFoldNameSep</span> <span class="o">=</span> <span class="s1">&#39;static/myfold1Sep.folded&#39;</span>
+    <span class="n">afterFoldNameCom</span> <span class="o">=</span> <span class="s1">&#39;static/myfold2Com.folded&#39;</span>
+    <span class="n">afterFoldNameSep</span> <span class="o">=</span> <span class="s1">&#39;static/myfold2Sep.folded&#39;</span>
+    <span class="n">flame1NameSep</span> <span class="o">=</span> <span class="s1">&#39;static/myflame1Separate.svg&#39;</span>
+    <span class="n">flame2NameSep</span> <span class="o">=</span> <span class="s1">&#39;static/myflame2Separate.svg&#39;</span>
+    <span class="n">flame1NameCom</span> <span class="o">=</span> <span class="s1">&#39;static/myflame1Combined.svg&#39;</span>
+    <span class="n">flame2NameCom</span> <span class="o">=</span> <span class="s1">&#39;static/myflame2Combined.svg&#39;</span>
+    <span class="n">diff1Name</span> <span class="o">=</span> <span class="s1">&#39;static/diff1.svg&#39;</span>
+    <span class="n">diff2Name</span> <span class="o">=</span> <span class="s1">&#39;static/diff2.svg&#39;</span>
+    <span class="n">onlyDiffName</span> <span class="o">=</span> <span class="s1">&#39;static/onlydiff.svg&#39;</span>
+
+    <span class="n">fileStrDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">flame1NameSep</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">flame2NameSep</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">flame1NameCom</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">flame2NameCom</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">diff1Name</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">diff2Name</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">onlyDiffName</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">exitBool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">contentVar2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#only make normal flamegraph</span>
+        <span class="n">foldedName1Com</span> <span class="o">=</span> <span class="s1">&#39;static/myfold1Com.folded&#39;</span>
+        <span class="n">foldedName1Sep</span> <span class="o">=</span> <span class="s1">&#39;static/myfold1Sep.folded&#39;</span>
+
+        <span class="n">svgHelp</span><span class="o">.</span><span class="n">_make_folded</span><span class="p">(</span><span class="n">contentVar1</span><span class="p">,</span> <span class="n">foldedName1Com</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">svgHelp</span><span class="o">.</span><span class="n">_make_folded</span><span class="p">(</span><span class="n">contentVar1</span><span class="p">,</span> <span class="n">foldedName1Sep</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">flameExit</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_flamegraph</span><span class="p">(</span>
+                <span class="n">foldedName1Com</span><span class="p">,</span>
+                <span class="n">flame1NameCom</span><span class="p">,</span>
+                <span class="n">defaultFlameOptions</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">flameExit</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">exitBool</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="n">flameExit</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_flamegraph</span><span class="p">(</span>
+                <span class="n">foldedName1Sep</span><span class="p">,</span>
+                <span class="n">flame1NameSep</span><span class="p">,</span>
+                <span class="n">defaultFlameOptions</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;--flamechart&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">flameExit</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">exitBool</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">exitBool</span><span class="p">):</span>
+            <span class="n">flameHandle1</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">flame1NameCom</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">fileStrDict</span><span class="p">[</span><span class="n">flame1NameCom</span><span class="p">]</span> <span class="o">=</span> <span class="n">flameHandle1</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">flameHandle1</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">flameHandle1</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">flame1NameSep</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">fileStrDict</span><span class="p">[</span><span class="n">flame1NameSep</span><span class="p">]</span> <span class="o">=</span> <span class="n">flameHandle1</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">flameHandle1</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fileStrDict</span><span class="p">[</span><span class="n">flame1NameCom</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Failed to create FlameGraph&quot;</span>
+            <span class="n">fileStrDict</span><span class="p">[</span><span class="n">flame1NameSep</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Failed to create FlameGraph&quot;</span>
+
+        <span class="k">return</span> <span class="n">exitBool</span><span class="p">,</span> <span class="n">fileStrDict</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">makeDiff</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#puts content into before and after folded files</span>
+        <span class="n">svgHelp</span><span class="o">.</span><span class="n">_make_folded</span><span class="p">(</span><span class="n">contentVar1</span><span class="p">,</span> <span class="n">beforeFoldNameCom</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">svgHelp</span><span class="o">.</span><span class="n">_make_folded</span><span class="p">(</span><span class="n">contentVar1</span><span class="p">,</span> <span class="n">beforeFoldNameSep</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">svgHelp</span><span class="o">.</span><span class="n">_make_folded</span><span class="p">(</span><span class="n">contentVar2</span><span class="p">,</span> <span class="n">afterFoldNameCom</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">svgHelp</span><span class="o">.</span><span class="n">_make_folded</span><span class="p">(</span><span class="n">contentVar2</span><span class="p">,</span> <span class="n">afterFoldNameSep</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">exitCodes</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1">#create combined flamegraphs</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_flamegraph</span><span class="p">(</span>
+                <span class="n">beforeFoldNameCom</span><span class="p">,</span>
+                <span class="n">flame1NameCom</span><span class="p">,</span>
+                <span class="n">defaultFlameOptions</span>
+        <span class="p">)</span>
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+       
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_flamegraph</span><span class="p">(</span>
+                <span class="n">afterFoldNameCom</span><span class="p">,</span>
+                <span class="n">flame2NameCom</span><span class="p">,</span>
+                <span class="n">defaultFlameOptions</span>
+        <span class="p">)</span>
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+        <span class="c1">#create separated flamegrpahs</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_flamegraph</span><span class="p">(</span>
+                <span class="n">beforeFoldNameSep</span><span class="p">,</span>
+                <span class="n">flame1NameSep</span><span class="p">,</span>
+                <span class="n">defaultFlameOptions</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;--flamechart&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+       
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_flamegraph</span><span class="p">(</span>
+                <span class="n">afterFoldNameSep</span><span class="p">,</span>
+                <span class="n">flame2NameSep</span><span class="p">,</span>
+                <span class="n">defaultFlameOptions</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;--flamechart&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+        <span class="c1">#create differential flamegraphs</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_diff_flamegraph</span><span class="p">(</span>
+                <span class="n">afterFoldNameCom</span><span class="p">,</span> 
+                <span class="n">beforeFoldNameCom</span><span class="p">,</span>
+                <span class="n">diff1Name</span><span class="p">,</span>
+                <span class="p">[],</span>
+                <span class="p">[</span><span class="s1">&#39;--minwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">]</span>
+        <span class="p">)</span> 
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_diff_flamegraph</span><span class="p">(</span>
+                <span class="n">beforeFoldNameCom</span><span class="p">,</span> 
+                <span class="n">afterFoldNameCom</span><span class="p">,</span>
+                <span class="n">diff2Name</span><span class="p">,</span>
+                <span class="p">[],</span>
+                <span class="p">[</span><span class="s1">&#39;--minwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+        <span class="n">code</span> <span class="o">=</span> <span class="n">svgHelp</span><span class="o">.</span><span class="n">_create_diff_flamegraph</span><span class="p">(</span>
+                <span class="n">beforeFoldNameCom</span><span class="p">,</span>
+                <span class="n">afterFoldNameCom</span><span class="p">,</span>
+                <span class="n">onlyDiffName</span><span class="p">,</span>
+                <span class="p">[</span><span class="s1">&#39;-d&#39;</span><span class="p">],</span>
+                <span class="p">[</span><span class="s1">&#39;--minwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                <span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">exitCodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        code = svgHelp._connect_svgs(</span>
+<span class="sd">                diff1Name,</span>
+<span class="sd">                diff2Name,</span>
+<span class="sd">                onlyDiffName</span>
+<span class="sd">        )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">exitCodes</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">item</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">exitBool</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fileStrDict</span><span class="p">:</span>
+
+            <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">fileStrDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exitBool</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fileStrDict</span><span class="p">:</span>
+                <span class="n">fileStrDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Failed to create FlameGraph&#39;</span>
+
+        <span class="k">return</span> <span class="n">exitBool</span><span class="p">,</span> <span class="n">fileStrDict</span></div>
+
+
+<div class="viewcode-block" id="filter_json"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.filter_json">[docs]</a><span class="k">def</span> <span class="nf">filter_json</span><span class="p">(</span><span class="n">mainList</span><span class="p">,</span> <span class="n">queryStr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filters the the content of a JSON formatted list based on the critera of a</span>
+<span class="sd">    passed query string. If queryStr is None then mainList is returned as is</span>
+<span class="sd">    with no filtering. Otherwise only occurrences that pass the given queryStr</span>
+<span class="sd">    will be included in the returned list. For an occurrence to pass the query</span>
+<span class="sd">    it or any of its children must pass the query\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mainList: List[Dictionary]</span>
+<span class="sd">        Contains the JSON formatted iRule profiler data that will be filtered</span>
+<span class="sd">    queryStr: String</span>
+<span class="sd">        Determines which occurrences will pass the filter. Has a strict format:</span>
+<span class="sd">        &quot;(fieldname1==value1)operator(fieldname2==value2)...&quot; The following</span>
+<span class="sd">        fields are supported: [eventval, irule, remote, local, flow]. Remote,</span>
+<span class="sd">        and local values require the following format: </span>
+<span class="sd">        &quot;ipaddr:port:routedomain&quot; Flow values require: &quot;remoteaddr-localaddr&quot;</span>
+<span class="sd">        Additionally the following operators are supported: [bitwise OR &#39;|&#39;, </span>
+<span class="sd">        bitwise AND &#39;&amp;&#39;] See README for examples and extended explanation of</span>
+<span class="sd">        use</span>
+<span class="sd">    Return</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filteredList: List[Dictionary]</span>
+<span class="sd">        Contains all occurrence dicitonaries that matched the given query</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#used the list if it is given, used the filename if it is given</span>
+
+
+    <span class="k">if</span><span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mainList</span><span class="p">,</span> <span class="nb">list</span><span class="p">))):</span>
+        <span class="n">errmsg</span> <span class="o">=</span> <span class="s2">&quot;Passed value must be a list&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
+
+    <span class="c1">#if no queryStr is given then returns all content unfiltered</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">queryStr</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mainList</span>
+    <span class="k">if</span><span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="n">queryHelp</span><span class="o">.</span><span class="n">check_filter_str</span><span class="p">(</span><span class="n">queryStr</span><span class="p">))):</span>
+        <span class="n">errmsg</span> <span class="o">=</span> <span class="s2">&quot;INVALID FILTER STRING: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">queryStr</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
+    
+    <span class="c1">#pareses the queryStr into a structure usign LogicNode and BasicLogicNode</span>
+    <span class="n">queryNode</span><span class="o">=</span> <span class="n">queryHelp</span><span class="o">.</span><span class="n">_parse_query</span><span class="p">(</span><span class="n">queryStr</span><span class="p">)</span>
+    <span class="c1">#print(&quot;eBool: &quot; + str(eBool))</span>
+    <span class="c1">#reduces data to only those occurrences that pass filter</span>
+    <span class="n">queryHelp</span><span class="o">.</span><span class="n">_filter_data</span><span class="p">(</span><span class="n">mainList</span><span class="p">,</span> <span class="n">queryNode</span><span class="p">)</span>
+    <span class="c1">#initHelp._print_list(mainList) #quick check for correctness</span>
+    <span class="k">return</span> <span class="n">mainList</span></div>
+
+<div class="viewcode-block" id="load_json"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.load_json">[docs]</a><span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="n">inputFilename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads json file into a List\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: String</span>
+<span class="sd">        The name of the JSON file to load</span>
+<span class="sd">    Return</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mainList: List</span>
+<span class="sd">        Contains contents of the given file in List form</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">inputFilename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">mainList</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mainList</span></div>
+
+<div class="viewcode-block" id="save_json"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.save_json">[docs]</a><span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="n">myList</span><span class="p">,</span> <span class="n">outputFilename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dumps the contents of a list to a JSON file.\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    myList: List[Dictionary]</span>
+<span class="sd">        The list who&#39;s data will be saved to the JSON file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputFilename</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">myList</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="svg_to_png"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.svg_to_png">[docs]</a><span class="k">def</span> <span class="nf">svg_to_png</span><span class="p">(</span><span class="n">inputFilename</span><span class="p">,</span> <span class="n">outputFilename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a given svg file to a png image file\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    inputFilename: String</span>
+<span class="sd">        The name and path of the svg file to be converted</span>
+<span class="sd">    outputFilename: String</span>
+<span class="sd">        The name and path of the new .png file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">inputFilename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">inputFilename</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">tempHandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputFilename</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+                <span class="n">tempHandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">svg2png</span><span class="p">(</span><span class="n">bytestring</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">write_to</span><span class="o">=</span><span class="n">outputFilename</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">errStr</span> <span class="o">=</span> <span class="s2">&quot;FAILED TO CONVERT SVG TO PNG&quot;</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errStr</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="handle_error"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.handle_error">[docs]</a><span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="n">errorCode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a descriptive error message based on a custom error code.\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    errorCode: int</span>
+<span class="sd">        The error code for which the error message will be returned</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    errorMsg: String</span>
+<span class="sd">        The error message related to the errorCode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">errorDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="mi">1000</span><span class="p">:(</span><span class="s2">&quot;UNABLE TO GENERATE FILE: Unequal number of entries/exits in&quot;</span>
+            <span class="s2">&quot; input file&quot;</span><span class="p">),</span>
+            <span class="mi">1001</span><span class="p">:(</span><span class="s2">&quot;UNABLE TO GENERATE FILE: Occurrence found at unexpected&quot;</span>
+            <span class="s2">&quot; level in input file file&quot;</span><span class="p">),</span>
+            <span class="mi">1002</span><span class="p">:(</span><span class="s2">&quot;UNABLE TO GENERATE FILE: One or more entries in input file&quot;</span> 
+            <span class="s2">&quot; contain a greater than expected number of data fields&quot;</span><span class="p">),</span>
+            <span class="mi">1003</span><span class="p">:(</span><span class="s2">&quot;UNABLE TO GENERATE FILE: One or more entries in input file&quot;</span>
+            <span class="s2">&quot; contain a smaller than expected number of data fields&quot;</span><span class="p">),</span>
+            <span class="mi">1004</span><span class="p">:(</span><span class="s2">&quot;UNABLE TO GENERATE FILE: BYTECODE must not be lowest level&quot;</span>
+            <span class="s2">&quot; filtered. EVENT, RULE, and/or RULEVM must be filtered with&quot;</span>
+            <span class="s2">&quot; bytecode. Input file also cannot contain only BYTECODE entries&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">errorDict</span><span class="p">[</span><span class="n">errorCode</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="parse_filter_dict"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.parse_filter_dict">[docs]</a><span class="k">def</span> <span class="nf">parse_filter_dict</span><span class="p">(</span><span class="n">inputDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a dictionary containing Lists in String form into valid queryStr</span>
+<span class="sd">    for filter_json(). Made for the explicit purpose of parsing a string list</span>
+<span class="sd">    from Flask.\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inputDict: Dictionary</span>
+<span class="sd">        Each key should be a valid fieldname from filter_json. Each value</span>
+<span class="sd">        should be a String representing a list of Strings.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    outputDict: Dictionary</span>
+<span class="sd">        Takes the same format as inputDict except each value is a valid queryStr</span>
+<span class="sd">        for filter_json()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">outputDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">inputDict</span><span class="p">:</span>
+        <span class="n">qVals</span> <span class="o">=</span> <span class="n">inputDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">qVals</span> <span class="o">=</span> <span class="n">qVals</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">qVals</span> <span class="o">=</span> <span class="n">qVals</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">qVals</span> <span class="o">=</span> <span class="n">qVals</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">qVals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="n">qVals</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inputVals</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">qVals</span><span class="p">:</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;irule&#39;</span><span class="p">):</span>
+                    <span class="n">item</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                <span class="n">inputVals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;==&#39;</span> <span class="o">+</span> <span class="n">item</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+            <span class="n">qVals</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputVals</span><span class="p">)</span>
+
+        <span class="n">outputDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">qVals</span>
+
+    <span class="k">return</span> <span class="n">outputDict</span></div>
+
+
+
+<div class="viewcode-block" id="run_multiple_filters"><a class="viewcode-back" href="../../index.html#flaminglog.logrule.run_multiple_filters">[docs]</a><span class="k">def</span> <span class="nf">run_multiple_filters</span><span class="p">(</span><span class="n">filterDict</span><span class="p">,</span> <span class="n">inputList</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Runs filter_json() once for each fieldname in filterDict and runs each field</span>
+<span class="sd">    for mulitple values. Does the equivalent of an AND combination between each</span>
+<span class="sd">    different fieldname.\n</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filterDict: Dictionary</span>
+<span class="sd">        Each key should be valid fieldname in filter_json() and each value</span>
+<span class="sd">        should be a valid queryStr for the given fieldname.</span>
+<span class="sd">    inputList: List[Dictionary]</span>
+<span class="sd">        The JSON formatted iRule log data which will be filtered</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filteredList: List[Dictionary]</span>
+<span class="sd">        Contains the data from inputList which passed all the filters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">resultList</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">inputList</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">filterDict</span><span class="p">:</span>
+        <span class="n">resultList</span> <span class="o">=</span> <span class="n">filter_json</span><span class="p">(</span><span class="n">resultList</span><span class="p">,</span> <span class="n">filterDict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">resultList</span></div>
+
+
+
+
+
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, F5 Networks
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

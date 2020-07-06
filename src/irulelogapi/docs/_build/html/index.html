@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to irulelogapi’s documentation! &mdash; irulelogapi 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> irulelogapi
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Welcome to irulelogapi’s documentation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">irulelogapi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to irulelogapi’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-flaminglog">
+<span id="welcome-to-irulelogapi-s-documentation"></span><h1>Welcome to irulelogapi’s documentation!<a class="headerlink" href="#module-flaminglog" title="Permalink to this headline">¶</a></h1>
+<p>This is flaminglog</p>
+<dl class="function">
+<dt id="flaminglog.make_json">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">make_json</code><span class="sig-paren">(</span><em class="sig-param">inputFile</em>, <em class="sig-param">wantedOccList='None'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#make_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.make_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the output trace from the iRule profiler into a JSON formatted
+list. Strucutres and organizes the data in the passed iRule log file. If
+wantedOccList is None all occ-types are kept. Otherwise only those which are
+included in wantedOccList are kept.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputFile</strong> (<em>String</em>) – The path aand name of the input iRule log file</p></li>
+<li><p><strong>wantedOccList</strong> (<em>List</em><em>[</em><em>String</em><em>]</em>) – (Default Value = None) A list of the wanted occ-types. Will keep those
+types which are in the list and filter out all others. Valid inputs in
+the list include: EVENT, RULE, RULEVM, BYTECODE, CMDVM, CMD,VAR_MOD</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>outName</strong> (<em>String</em>) – The path and name of a JSON file which contains the contents of the
+structured and orgnaized data</p></li>
+<li><p><strong>outList</strong> (<em>List[Dictionary]</em>) – Contains identical contents to outName but is in list form</p></li>
+<li><p><strong>errorCode</strong> (<em>int</em>) – Indicated whether the data was successfully converted. If successful
+errorCode=0. Otherwise will output a custom errorCode.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.filter_json">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">filter_json</code><span class="sig-paren">(</span><em class="sig-param">mainList</em>, <em class="sig-param">queryStr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#filter_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.filter_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters the the content of a JSON formatted list based on the critera of a
+passed query string. If queryStr is None then mainList is returned as is
+with no filtering. Otherwise only occurrences that pass the given queryStr
+will be included in the returned list. For an occurrence to pass the query
+it or any of its children must pass the query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mainList</strong> (<em>List</em><em>[</em><em>Dictionary</em><em>]</em>) – Contains the JSON formatted iRule profiler data that will be filtered</p></li>
+<li><p><strong>queryStr</strong> (<em>String</em>) – Determines which occurrences will pass the filter. Has a strict format:
+“(fieldname1==value1)operator(fieldname2==value2)…” The following
+fields are supported: [eventval, irule, remote, local, flow]. Remote,
+and local values require the following format:
+“ipaddr:port:routedomain” Flow values require: “remoteaddr-localaddr”
+Additionally the following operators are supported: [bitwise OR ‘|’,
+bitwise AND ‘&amp;’] See README for examples and extended explanation of
+use</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>filteredList</strong> – Contains all occurrence dicitonaries that matched the given query</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Dictionary]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.parse_filter_dict">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">parse_filter_dict</code><span class="sig-paren">(</span><em class="sig-param">inputDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#parse_filter_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.parse_filter_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a dictionary containing Lists in String form into valid queryStr
+for filter_json(). Made for the explicit purpose of parsing a string list
+from Flask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputDict</strong> (<em>Dictionary</em>) – Each key should be a valid fieldname from filter_json. Each value
+should be a String representing a list of Strings.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>outputDict</strong> – Takes the same format as inputDict except each value is a valid queryStr
+for filter_json()</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.run_multiple_filters">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">run_multiple_filters</code><span class="sig-paren">(</span><em class="sig-param">filterDict</em>, <em class="sig-param">inputList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#run_multiple_filters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.run_multiple_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs filter_json() once for each fieldname in filterDict and runs each field
+for mulitple values. Does the equivalent of an AND combination between each
+different fieldname.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filterDict</strong> (<em>Dictionary</em>) – Each key should be valid fieldname in filter_json() and each value
+should be a valid queryStr for the given fieldname.</p></li>
+<li><p><strong>inputList</strong> (<em>List</em><em>[</em><em>Dictionary</em><em>]</em>) – The JSON formatted iRule log data which will be filtered</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>filteredList</strong> – Contains the data from inputList which passed all the filters</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Dictionary]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.make_svg">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">make_svg</code><span class="sig-paren">(</span><em class="sig-param">contentVar1</em>, <em class="sig-param">contentVar2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#make_svg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.make_svg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates Flame Graphs based on JSON formatted content passed to it. If
+contentVar2 is None then 2 Flame Graphs will be created. One showing a view
+where function calls with the same name are combined into a single box. And
+another where each individual call is separated no matter what and the
+calls are all in chronological order. If another list is passed in
+contentVar2 then 7 different Flame Graphs are created. See README for more
+details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>contentVar1</strong> (<em>List</em><em>[</em><em>Dictionary</em><em>]</em>) – The JSON formatted content of before set of data if contentVar 2 is
+passed. If contentVar2 is None then it will be the only dataset.</p></li>
+<li><p><strong>contentVar2</strong> (<em>List</em><em>[</em><em>Dictionary</em><em>]</em>) – (Default Value = None) The JSON formatted content of the after dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>exitBool</strong> (<em>Boolean</em>) – True if the Flame Graphs were succesfully created. False otherwise</p></li>
+<li><p><strong>fileDict</strong> (<em>Dictionary</em>) – Each key is the name and path of the generated .svg files. The value of
+each key is the contents of that file as a String. The default value
+with each key is None. If a file is not created in that run of make_svg
+its associated value will be None in fileDict</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.svg_to_png">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">svg_to_png</code><span class="sig-paren">(</span><em class="sig-param">inputFilename</em>, <em class="sig-param">outputFilename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#svg_to_png"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.svg_to_png" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a given svg file to a png image file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputFilename</strong> (<em>String</em>) – The name and path of the svg file to be converted</p></li>
+<li><p><strong>outputFilename</strong> (<em>String</em>) – The name and path of the new .png file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.cleanup">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all files created by the API.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.remove_png_files">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">remove_png_files</code><span class="sig-paren">(</span><em class="sig-param">folder='.'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#remove_png_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.remove_png_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removed all png files from the given folder. If no folder is specified the
+current working directory will be used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder</strong> (<em>String</em>) – (Default Value = ‘.’) The folder from which all .png files will be
+deleted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.handle_error">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">handle_error</code><span class="sig-paren">(</span><em class="sig-param">errorCode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#handle_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.handle_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a descriptive error message based on a custom error code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>errorCode</strong> (<em>int</em>) – The error code for which the error message will be returned</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>errorMsg</strong> – The error message related to the errorCode</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.save_json">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">save_json</code><span class="sig-paren">(</span><em class="sig-param">myList</em>, <em class="sig-param">outputFilename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.save_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dumps the contents of a list to a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>myList</strong> (<em>List</em><em>[</em><em>Dictionary</em><em>]</em>) – The list who’s data will be saved to the JSON file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flaminglog.load_json">
+<code class="sig-prename descclassname">flaminglog.</code><code class="sig-name descname">load_json</code><span class="sig-paren">(</span><em class="sig-param">inputFilename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flaminglog/logrule.html#load_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flaminglog.load_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads json file into a List</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>String</em>) – The name of the JSON file to load</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mainList</strong> – Contains contents of the given file in List form</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, F5 Networks
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

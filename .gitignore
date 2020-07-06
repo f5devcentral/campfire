@@ -1,0 +1,21 @@
+#Gitignore file
+.idea/*
+.DS_Store
+*.pem
+ghtoken
+
+#filetpyes#
+###########
+
+StructLogs/*
+static/*
+flaminglog/StructLogs/*
+*.folded
+*.swp
+plog.txt
+tempFile.txt
+*lines.txt
+*Lines.txt
+tempout.txt
+testout.png
+__pycache__/
