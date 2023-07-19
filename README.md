@@ -1,5 +1,5 @@
 CampFire is a web application that turns iRule log files into flame graphs.
-<br>More information about CampFire can be found here: (Future DevCentral Article)
+<br>More information about [CampFire can be found here](https://www.youtube.com/live/ttW701tqXRM?feature=share&t=2789).
 
 ## Run CampFire in Local Environment
 Prerequisites: Docker, socat*
